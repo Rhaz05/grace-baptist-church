@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "title": "Amazing Grace",
+    "artist": "John Newton",
+    "key": "G",
+    "lyrics": "[Verse 1]\nAmazing grace! How sweet the sound\nThat saved a wretch like me!\nI once was lost, but now am found;\nWas blind, but now I see.\n\n[Verse 2]\n'Twas grace that taught my heart to fear,\nAnd grace my fears relieved;\nHow precious did that grace appear\nThe hour I first believed.\n\n[Verse 3]\nThrough many dangers, toils, and snares,\nI have already come;\n'Tis grace hath brought me safe thus far,\nAnd grace will lead me home."
+  },
+  {
+    "id": 2,
+    "title": "10,000 Reasons (Bless the Lord)",
+    "artist": "Matt Redman",
+    "key": "F",
+    "lyrics": "[Chorus]\nBless the Lord, O my soul, O my soul\nWorship His holy name\nSing like never before, O my soul\nI'll worship Your holy name\n\n[Verse 1]\nThe sun comes up, it's a new day dawning\nIt's time to sing Your song again\nWhatever may pass, and whatever lies before me\nLet me be singing when the evening comes"
+  },
+  {
+    "id": 3,
+    "title": "Cornerstone",
+    "artist": "Hillsong Worship",
+    "key": "C",
+    "lyrics": "[Verse 1]\nMy hope is built on nothing less\nThan Jesus' blood and righteousness\nI dare not trust the sweetest frame\nBut wholly trust in Jesus' Name\n\n[Chorus]\nChrist alone, Cornerstone\nWeak made strong in the Saviour's love\nThrough the storm, He is Lord\nLord of all"
+  },
+  {
+    "id": 4,
+    "title": "Great Are You Lord",
+    "artist": "All Sons & Daughters",
+    "key": "A",
+    "lyrics": "[Verse]\nYou give life, You are love\nYou bring light to the darkness\nYou give hope, You restore\nEvery heart that is broken\nAnd great are You, Lord\n\n[Chorus]\nIt's Your breath in our lungs\nSo we pour out our praise\nWe pour out our praise\nIt's Your breath in our lungs\nSo we pour out our praise to You only"
+  },
+  {
+    "id": 5,
+    "title": "Holy Spirit",
+    "artist": "Bryan & Katie Torwalt",
+    "key": "D",
+    "lyrics": "[Verse 1]\nThere's nothing worth more, that will ever come close\nNo thing can compare, You're our living hope\nYour Presence\n\n[Chorus]\nHoly Spirit, You are welcome here\nCome flood this place and fill the atmosphere\nYour glory, God, is what our hearts long for\nTo be overcome by Your Presence, Lord"
+  },
+  {
+    "id": 6,
+    "title": "In Christ Alone",
+    "artist": "Keith Getty",
+    "key": "Eb",
+    "lyrics": "[Verse 1]\nIn Christ alone my hope is found\nHe is my light, my strength, my song\nThis Cornerstone, this solid Ground\nFirm through the fiercest drought and storm"
+  }
+]

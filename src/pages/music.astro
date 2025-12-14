@@ -1,0 +1,414 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+const alphabet = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+---
+
+<MainLayout title="Song Library">
+    
+    <div class="container page-content">
+        
+        <section class="text-center mb-5 fade-in-up">
+            <h1 class="text-uppercase fw-bold page-title">Worship Library</h1>
+            <p class="lead">A collection of songs we sing to praise His name.</p>
+        </section>
+
+        <section class="content-card mb-4 fade-in-up" style="padding: 2rem;">
+            
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-8">
+                    <div class="search-wrapper position-relative">
+                        <Icon name="fa-solid:search" class="search-icon text-muted" />
+                        <input type="text" id="searchInput" class="form-control search-input" placeholder="Find a song by title or artist...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2 az-filter-container">
+                <button class="filter-chip active" data-filter="all">ALL</button>
+                {alphabet.map(letter => (
+                    <button class="filter-chip" data-filter={letter}>{letter}</button>
+                ))}
+            </div>
+        </section>
+
+        <section class="song-list-section fade-in-up" style="animation-delay: 0.2s;">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-0">
+                    
+                    <div class="d-none d-md-flex bg-light p-3 fw-bold text-secondary border-bottom">
+                        <div class="col-6 ps-3">SONG TITLE</div>
+                        <div class="col-4">ARTIST / AUTHOR</div>
+                        <div class="col-2 text-center">KEY</div>
+                    </div>
+
+                    <div id="songContainer">
+                        <div class="text-center p-5 text-muted">Loading songs...</div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <p class="text-center text-white-50 mt-3 small" id="songCountDisplay"></p>
+        </section>
+
+    </div>
+
+    <div id="lyricModal" class="lyric-modal-backdrop">
+        <div class="lyric-modal-content">
+            
+            <button id="closeModalBtn" class="close-btn">
+                <Icon name="fa-solid:times" />
+            </button>
+
+            <div class="modal-header-custom text-center mb-4">
+                <span class="badge bg-danger mb-2" id="modalKeyBadge">Key: G</span>
+                <h2 class="fw-bold mb-1" id="modalTitle">Song Title</h2>
+                <p class="text-muted mb-0" id="modalArtist">Artist Name</p>
+            </div>
+
+            <div class="modal-body-custom">
+                <div class="lyrics-text" id="modalLyrics">
+                    </div>
+            </div>
+
+        </div>
+    </div>
+
+</MainLayout>
+
+<style>
+    .fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .content-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .search-input {
+        padding: 15px 15px 15px 50px; /* Space for icon */
+        border-radius: 50px;
+        border: 1px solid #e0e0e0;
+        background: #f8f9fa;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        background: white;
+        border-color: #8B0000;
+        box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        z-index: 5;
+    }
+
+    .az-filter-container {
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .filter-chip {
+        border: 1px solid #e0e0e0;
+        background: white;
+        color: #555;
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .filter-chip:hover {
+        background: #f8f9fa;
+        color: #8B0000;
+        transform: translateY(-2px);
+    }
+
+    .filter-chip.active {
+        background: #8B0000;
+        color: white;
+        border-color: #8B0000;
+        box-shadow: 0 4px 10px rgba(139, 0, 0, 0.2);
+    }
+
+    .song-row {
+        cursor: pointer;
+        transition: background 0.2s ease;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 1.25rem 1rem;
+    }
+
+    .song-row:last-child {
+        border-bottom: none;
+    }
+
+    .song-row:hover {
+        background-color: #fdf2f2;
+    }
+    
+    .song-row:hover .song-title {
+        color: #8B0000;
+    }
+
+    .song-title {
+        font-weight: 700;
+        color: #333;
+        font-size: 1.05rem;
+    }
+
+    .key-badge {
+        background: #f0f0f0;
+        color: #666;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+    }
+
+    .lyric-modal-backdrop {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        z-index: 10000;
+        display: none; 
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .lyric-modal-backdrop.open {
+        display: flex;
+        opacity: 1;
+    }
+
+    .lyric-modal-content {
+        background: white;
+        width: 100%;
+        max-width: 600px;
+        max-height: 85vh;
+        border-radius: 20px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .lyric-modal-backdrop.open .lyric-modal-content {
+        transform: scale(1);
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #f0f0f0;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #333;
+        transition: all 0.2s;
+        z-index: 10;
+    }
+
+    .close-btn:hover {
+        background: #e0e0e0;
+        transform: rotate(90deg);
+    }
+
+    .modal-header-custom {
+        padding: 2rem 2rem 1rem;
+        border-bottom: 1px dashed #e0e0e0;
+        flex-shrink: 0; 
+    }
+
+    .modal-body-custom {
+        padding: 1rem 2rem 2rem;
+        overflow-y: auto; 
+        flex-grow: 1;
+    }
+
+    .lyrics-text {
+        font-family: 'Georgia', serif;
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: #333;
+        white-space: pre-wrap; 
+        text-align: center;
+    }
+
+</style>
+
+<script>
+    // Interfaces
+    interface Song {
+        id: number;
+        title: string;
+        artist: string;
+        key: string;
+        lyrics: string;
+    }
+
+    document.addEventListener("astro:page-load", () => {
+        const DATA_URL = "/data/music.json";
+        
+        let allSongs: Song[] = [];
+        let currentFilter = "all"; 
+        
+        const songContainer = document.getElementById("songContainer");
+        const searchInput = document.getElementById("searchInput") as HTMLInputElement;
+        const filterChips = document.querySelectorAll(".filter-chip");
+        const songCountDisplay = document.getElementById("songCountDisplay");
+
+        const modal = document.getElementById("lyricModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalArtist = document.getElementById("modalArtist");
+        const modalKey = document.getElementById("modalKeyBadge");
+        const modalLyrics = document.getElementById("modalLyrics");
+
+        const renderList = (songs: Song[]) => {
+            if (!songContainer) return;
+            songContainer.innerHTML = "";
+
+            if (songs.length === 0) {
+                songContainer.innerHTML = `
+                    <div class="text-center p-5">
+                        <p class="text-muted fw-bold">No songs found.</p>
+                        <small class="text-secondary">Try adjusting your search or filter.</small>
+                    </div>`;
+                if(songCountDisplay) songCountDisplay.innerText = "0 songs found";
+                return;
+            }
+
+            if(songCountDisplay) songCountDisplay.innerText = `${songs.length} song${songs.length !== 1 ? 's' : ''} found`;
+
+            songs.forEach(song => {
+                const row = document.createElement("div");
+                row.className = "song-row d-flex flex-column flex-md-row align-items-md-center justify-content-between";
+                
+                row.innerHTML = `
+                    <div class="col-md-6 mb-1 mb-md-0 ps-md-3 p-3">
+                        <div class="song-title">${song.title}</div>
+                    </div>
+                    <div class="col-md-4 mb-1 mb-md-0">
+                        <small class="text-muted text-uppercase fw-bold" style="font-size: 0.75rem;">${song.artist}</small>
+                    </div>
+                    <div class="col-md-2 text-md-center d-flex align-items-center justify-content-between justify-content-md-center mt-2 mt-md-0">
+                        <span class="key-badge">Key: ${song.key || "-"}</span>
+                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3 ms-3 d-md-none small">View</button>
+                    </div>
+                `;
+
+                row.addEventListener("click", () => openModal(song));
+                songContainer.appendChild(row);
+            });
+        };
+
+        const applyFilters = () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            const filtered = allSongs.filter(song => {
+                const matchesSearch = song.title.toLowerCase().includes(searchTerm) || 
+                                      song.artist.toLowerCase().includes(searchTerm) ||
+                                      song.lyrics.toLowerCase().includes(searchTerm);
+
+                let matchesLetter = true;
+                if (currentFilter !== "all") {
+                    if (currentFilter === "#") {
+                        matchesLetter = /^\d/.test(song.title);
+                    } else {
+                        matchesLetter = song.title.toUpperCase().startsWith(currentFilter);
+                    }
+                }
+
+                return matchesSearch && matchesLetter;
+            });
+
+            renderList(filtered);
+        };
+
+        const openModal = (song: Song) => {
+            if(modalTitle) modalTitle.innerText = song.title;
+            if(modalArtist) modalArtist.innerText = song.artist;
+            if(modalKey) modalKey.innerText = `Key: ${song.key || "?"}`;
+            
+            if(modalLyrics) {
+                let formatted = song.lyrics;
+                formatted = formatted.replace(/\[(.*?)\]/g, '<br><strong class="d-block text-danger text-uppercase small mt-3 mb-1">$1</strong>');
+                modalLyrics.innerHTML = formatted;
+            }
+
+            modal?.classList.add("open");
+            document.body.style.overflow = "hidden"; 
+        };
+
+        const closeModal = () => {
+            modal?.classList.remove("open");
+            document.body.style.overflow = ""; 
+        };
+
+        searchInput?.addEventListener("input", applyFilters);
+
+        filterChips.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                filterChips.forEach(b => b.classList.remove("active"));
+                (e.target as HTMLElement).classList.add("active");
+
+                currentFilter = (e.target as HTMLElement).getAttribute("data-filter") || "all";
+                applyFilters();
+            });
+        });
+
+        closeModalBtn?.addEventListener("click", closeModal);
+        modal?.addEventListener("click", (e) => {
+            if (e.target === modal) closeModal(); 
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal?.classList.contains("open")) closeModal();
+        });
+
+        const init = async () => {
+            try {
+                const res = await fetch(DATA_URL);
+                if(!res.ok) throw new Error("Data fetch failed");
+                allSongs = await res.json();
+                
+                allSongs.sort((a, b) => a.title.localeCompare(b.title));
+                
+                renderList(allSongs);
+            } catch (err) {
+                console.error(err);
+                if(songContainer) songContainer.innerHTML = '<p class="text-danger text-center p-5">Could not load song library.</p>';
+            }
+        };
+
+        init();
+    });
+</script>
