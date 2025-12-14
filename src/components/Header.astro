@@ -7,7 +7,7 @@ const base = import.meta.env.BASE_URL;
     <nav class="navbar navbar-light navbar-custom p-0">
         <div class="container-fluid px-3 px-lg-5 py-2 d-flex justify-content-between align-items-center">
             
-            <a class="navbar-brand d-flex align-items-center m-0" href="/">
+            <a class="navbar-brand d-flex align-items-center m-0" href={base}>
                 <div class="me-2 me-md-3">
                     <img src={base + "img/TRANS LOGO.png"} alt="Grace Baptist Church Logo" style="max-height: 50px; width: auto;" />
                 </div>
@@ -32,47 +32,47 @@ const base = import.meta.env.BASE_URL;
             <nav>
                 <ul class="nav flex-column gap-2 p-2">
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/">
+                        <a class="nav-link d-flex align-items-center" href={base}>
                             <Icon name="fa-solid:home" class="me-3" size="1.2rem" /> Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/about">
+                        <a class="nav-link d-flex align-items-center" href={base + "about"}>
                             <Icon name="fa-solid:church" class="me-3" size="1.2rem" /> About Us
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/preaching">
+                        <a class="nav-link d-flex align-items-center" href={base + "preaching"}>
                             <Icon name="fa-solid:book-open" class="me-3" size="1.2rem" /> Preaching
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/bible-study">
+                        <a class="nav-link d-flex align-items-center" href={base + "bible-study"}>
                             <Icon name="fa-solid:book-reader" class="me-3" size="1.2rem" /> Bible Study
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/staff">
+                        <a class="nav-link d-flex align-items-center" href={base + "staff"}>
                             <Icon name="fa-solid:users" class="me-3" size="1.2rem" /> Staff
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/photos">
+                        <a class="nav-link d-flex align-items-center" href={base + "photos"}>
                             <Icon name="fa-solid:images" class="me-3" size="1.2rem" /> Photos
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/music">
+                        <a class="nav-link d-flex align-items-center" href={base + "music"}>
                             <Icon name="fa-solid:music" class="me-3" size="1.2rem" /> Music
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/events">
+                        <a class="nav-link d-flex align-items-center" href={base + "events"}>
                             <Icon name="fa-solid:calendar-alt" class="me-3" size="1.2rem" /> Events
                         </a>
                     </li>
-                                        <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="/missions">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href={base + "missions"}>
                             <Icon name="fa-solid:church" class="me-3" size="1.2rem" /> Missions
                         </a>
                     </li>
