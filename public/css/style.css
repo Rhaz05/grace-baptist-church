@@ -408,12 +408,10 @@ header,
   letter-spacing: 1px;
 }
 
-/* Ensure white backgrounds for content boxes */
 .bg-white {
   background-color: #ffffff !important;
 }
 
-/* Text Colors */
 .text-white-50 {
   color: rgba(255, 255, 255, 0.7) !important;
 }
@@ -422,13 +420,11 @@ header,
    9. GLOBAL UTILITIES (CLEANUP)
    ========================================= */
 
-/* Use this wrapper on pages to clear the fixed header automatically */
 .page-content {
   padding-top: 120px;
   padding-bottom: 5rem;
 }
 
-/* Use this for any white content box (History, Services, etc.) */
 .content-card {
   background-color: white;
   border-radius: 0.5rem;
@@ -437,7 +433,6 @@ header,
   margin-bottom: 0.5rem;
 }
 
-/* Home Hero Specifics */
 .home-hero-spacer {
   padding-top: 535px;
   padding-bottom: 100px;

@@ -1,0 +1,118 @@
+---
+import { Icon } from 'astro-icon/components';
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+    <div class="container text-center">
+        
+        <div class="footer-nav mb-4">
+            <a href="/about" class="footer-link">About Us</a>
+            <a href="/services" class="footer-link">Services</a>
+            <a href="/preaching" class="footer-link">Preaching</a>
+            <a href="/events" class="footer-link">Events</a>
+            <a href="/ministries" class="footer-link">Ministries</a>
+            <a href="/contact" class="footer-link">Contact</a>
+        </div>
+
+        <div class="footer-social mb-4">
+            <a href="#" aria-label="YouTube" class="social-icon">
+                <Icon name="fa-brands:youtube" size="1.5rem" />
+            </a>
+            <a href="#" aria-label="Facebook" class="social-icon">
+                <Icon name="fa-brands:facebook-f" size="1.2rem" />
+            </a>
+            <a href="#" aria-label="Instagram" class="social-icon">
+                <Icon name="fa-brands:instagram" size="1.5rem" />
+            </a>
+            <a href="#" aria-label="Twitter" class="social-icon">
+                <Icon name="fa-brands:twitter" size="1.3rem" />
+            </a>
+        </div>
+
+        <div class="footer-contact mb-4">
+            <p class="mb-1">123 Church Street, City, State 12345</p>
+            <p class="mb-1">
+                Phone: <a href="tel:5551234567">(555) 123-4567</a> 
+                <span class="mx-2">•</span> 
+                Email: <a href="mailto:info@gracebaptist.org">info@gracebaptist.org</a>
+            </p>
+        </div>
+
+        <div class="footer-copyright">
+            <p class="mb-0">&copy; {currentYear} Grace Baptist Church. All rights reserved.</p>
+        </div>
+
+    </div>
+</footer>
+
+<style>
+
+    .site-footer {
+        background-color: #555e66;
+        color: rgba(255, 255, 255, 0.8); 
+        padding: 4rem 0 2rem;
+        font-size: 0.9rem;
+    }
+
+    .footer-link {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        display: inline-block;
+    }
+
+    .footer-link:hover {
+        color: #ffec3e; 
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .social-icon {
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1); 
+        margin: 0 8px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .social-icon:hover {
+        background-color: #8B0000; 
+        transform: translateY(-3px);
+        color: white;
+    }
+
+    .footer-contact a {
+        color: rgba(255, 255, 255, 0.9);
+        text-decoration: none;
+        border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+    }
+    
+    .footer-contact a:hover {
+        color: white;
+        border-bottom-style: solid;
+    }
+
+    .footer-copyright {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .footer-link {
+            display: block;
+            margin: 10px 0;
+        }
+    }
+</style>
