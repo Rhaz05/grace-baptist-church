@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config'
-import icon from 'astro-icon' 
+import icon from 'astro-icon'
 
 export default defineConfig({
-  integrations: [
-    icon(), 
-  ],
+  integrations: [icon()],
+  site: 'https://rhaz05.github.io',
+  base: '//grace-baptist-church',
 })
