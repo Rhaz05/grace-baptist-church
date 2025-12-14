@@ -1,11 +1,104 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<MainLayout title="Home">
+    
+    <div class="container home-hero-spacer">
+        <div class="ps-3">
+            <div class="d-flex align-items-center">
+                <div class="hero-accent"></div>
+                <h1 class="text-holder">Welcome to Grace Baptist Church</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 5rem;">
+
+        <section class="content-card text-center">
+            <div class="d-flex justify-content-center align-items-center mb-5">
+                <div class="divider-line"></div>
+                <h2>Quick Info</h2>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <Icon name="fa-solid:calendar-alt" size="2em" class="text-secondary" />
+                    </div>
+                    <p class="text-muted">Sunday Worship: 10:00 AM</p>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <Icon name="fa-solid:lock" size="2em" class="text-secondary" />
+                    </div>
+                    <p class="text-muted">Safe and Welcoming Environment</p>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <Icon name="fa-solid:heartbeat" size="2em" class="text-secondary" />
+                    </div>
+                    <p class="text-muted">Caring Community Support</p>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                    <div class="mb-3 d-flex justify-content-center">
+                        <Icon name="fa-solid:bus" size="2em" class="text-secondary" />
+                    </div>
+                    <p class="text-muted">Transportation Available</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-card">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4">
+                    <p class="text-uppercase text-muted mb-1">Latest Sermon</p>
+                    <h2 class="latest-sermon-title mb-4">The Power of Faith</h2>
+
+                    <a href="#" class="btn btn-red mb-3 d-block w-75 d-flex align-items-center justify-content-center gap-2">
+                        <Icon name="fa-solid:plus" /> Watch Now
+                    </a>
+
+                    <a href="#" class="btn btn-outline-red d-block w-75 d-flex align-items-center justify-content-center gap-2">
+                        <Icon name="fa-solid:plus" /> View all Sermons
+                    </a>
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="video-placeholder d-flex align-items-center justify-content-center">
+                        <Icon name="fa-solid:play-circle" size="4rem" style="color: rgba(0,0,0,0.3);" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-card text-center">
+            <h2 class="latest-sermon-title mb-5">Events</h2>
+
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-5 col-md-6 mb-4">
+                    <div class="event-card position-relative">
+                        <div class="event-icon d-flex align-items-center justify-content-center">
+                            <Icon name="fa-solid:times" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-6 mb-4">
+                    <div class="event-card position-relative">
+                        <div class="event-icon d-flex align-items-center justify-content-center">
+                            <Icon name="fa-solid:times" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#" class="btn btn-red btn-lg d-inline-flex align-items-center gap-2">
+                <Icon name="fa-solid:plus" /> VIEW UPCOMING EVENTS
+            </a>
+        </section>
+
+    </div>
+
+</MainLayout>

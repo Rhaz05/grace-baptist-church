@@ -1,0 +1,43 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<header>
+    <nav class="navbar navbar-light navbar-custom p-0">
+        <div class="container-fluid px-3 px-lg-5 py-2">
+            
+            <a class="navbar-brand d-flex align-items-center m-0" href="/">
+                <div class="me-2 me-md-3">
+                    <img src="/img/TRANS_LOGO.png" alt="Grace Baptist Church" style="max-height: 50px; width: auto;">
+                </div>
+                <div class="d-flex flex-column justify-content-center lh-1">
+                    <span class="fw-bold brand-text text-wrap">Grace Baptist Church</span>
+                    <span class="brand-tagline text-secondary mt-1 d-none d-sm-block">Worship • Community • Service</span>
+                </div>
+            </a>
+
+            <button class="navbar-toggler border-0 ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
+                <Icon name="fa-solid:bars" size="1.5rem" style="color: #8B0000;" />
+            </button>
+        </div>
+    </nav>
+
+    <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="offcanvasRight">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title">Menu</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <nav>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/preaching">Preaching</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/bibleStudy">Bible Study</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/staff">Staff</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/photos">Photos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
