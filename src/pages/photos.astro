@@ -1,0 +1,220 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+// Carousel: Highlighted Events
+const highlights = [
+    { 
+        img: "/img/sample1.jpg", 
+        title: "Community Baptism", 
+        desc: "Celebrating new life in Christ at the river." 
+    },
+    { 
+        img: "/img/sample2.jpg", 
+        title: "Youth Summer Camp", 
+        desc: "A week of fun, fellowship, and spiritual growth." 
+    },
+    { 
+        img: "/img/sample3.jpg", 
+        title: "Christmas Service", 
+        desc: "Our candlelight service remembering the birth of our Savior." 
+    }
+];
+
+// Grid 1: Recent Albums
+const recentAlbums = [
+    { title: "Sunday Service", count: "12 Photos" },
+    { title: "Kids Ministry", count: "24 Photos" },
+    { title: "Outreach Day", count: "8 Photos" },
+    { title: "Mens Breakfast", count: "15 Photos" },
+    { title: "Womens Retreat", count: "30 Photos" },
+    { title: "Picnic", count: "42 Photos" }
+];
+
+// Grid 2: Archives (Years)
+const archives = ["2024", "2023", "2022", "2021", "2020", "2019"];
+---
+
+<MainLayout title="Photos">
+    
+    <div class="container page-content">
+        
+        <section class="text-center mb-5 fade-in-up">
+            <h1 class="text-uppercase fw-bold page-title">Photo Gallery</h1>
+            <p class="lead">Capturing the moments that define our community and faith.</p>
+        </section>
+
+        <section class="mb-5 fade-in-up" style="animation-delay: 0.1s;">
+            <div id="photoCarousel" class="carousel slide gallery-carousel shadow-lg" data-bs-ride="carousel">
+                
+                <div class="carousel-indicators">
+                    {highlights.map((_, index) => (
+                        <button 
+                            type="button" 
+                            data-bs-target="#photoCarousel" 
+                            data-bs-slide-to={index} 
+                            class={index === 0 ? "active" : ""} 
+                            aria-current={index === 0 ? "true" : "false"} 
+                            aria-label={`Slide ${index + 1}`}
+                        ></button>
+                    ))}
+                </div>
+
+                <div class="carousel-inner rounded-4 overflow-hidden">
+                    {highlights.map((slide, index) => (
+                        <div class={`carousel-item ${index === 0 ? "active" : ""}`}>
+                            <div class="carousel-placeholder d-flex align-items-center justify-content-center">
+                                <div class="text-center text-white opacity-50">
+                                    <Icon name="fa-solid:camera" size="4rem" class="mb-3" />
+                                    <h5 class="d-md-none">{slide.title}</h5>
+                                </div>
+                                </div>
+
+                            <div class="carousel-caption d-none d-md-block glass-caption">
+                                <h5>{slide.title}</h5>
+                                <p>{slide.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="my-5 fade-in-up" style="animation-delay: 0.2s;">
+            <h2 class="text-center fw-bold mb-4">Recent Albums</h2>
+            
+            <div class="row g-3">
+                {recentAlbums.map((album) => (
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="album-card">
+                            <div class="card-content d-flex flex-column align-items-center justify-content-center h-100">
+                                <Icon name="fa-solid:images" size="2rem" class="text-secondary mb-2 icon-hover" />
+                                <span class="fw-bold text-dark text-uppercase">{album.title}</span>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+
+        <section class="my-5 fade-in-up" style="animation-delay: 0.3s;">
+            <h2 class="text-center fw-bold text-white mb-4">Archive</h2>
+            
+            <div class="row g-3">
+                {archives.map((year) => (
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="archive-box text-center">
+                            <h4 class="fw-bold text-secondary mb-0">{year}</h4>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+
+    </div>
+</MainLayout>
+
+<style>
+    /* 1. ANIMATION */
+    .fade-in-up {
+        animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 2. CAROUSEL STYLES */
+    .gallery-carousel {
+        border-radius: 1rem;
+        overflow: hidden;
+        border: 4px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .carousel-placeholder {
+        height: 500px;
+        background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
+        position: relative;
+    }
+
+    .glass-caption {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        bottom: 2rem;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        max-width: 60%;
+        margin: 0 auto;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* 3. ALBUM CARDS (Grid 1) */
+    .album-card {
+        height: 200px;
+        background-color: #f8f9fa !important; 
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .album-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        background-color: #ffffff !important;
+    }
+
+    .icon-hover {
+        transition: color 0.3s ease;
+    }
+    
+    .album-card:hover .icon-hover {
+        color: #8B0000 !important;
+    }
+
+    /* 4. ARCHIVE BOXES (Grid 2) */
+    .archive-box {
+        background-color: #ffffff !important; 
+        padding: 2rem 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .archive-box:hover {
+        background-color: #8B0000 !important; 
+        transform: translateY(-3px);
+    }
+
+    .archive-box:hover h4 {
+        color: white !important;
+    }
+
+    /* MOBILE ADJUSTMENTS */
+    @media (max-width: 768px) {
+        .carousel-placeholder {
+            height: 250px;
+        }
+        .glass-caption {
+            max-width: 90%;
+            bottom: 1rem;
+            padding: 1rem;
+        }
+    }
+</style>

@@ -20,7 +20,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Bootstrap Container Override */
+/* Bootstrap Container Override - DESKTOP ONLY */
+/* This is what was crushing your mobile view. 
+   We keep it here for big screens, but override it below for mobile. */
 .container {
   max-width: 100%;
   padding-left: 200px;
@@ -309,7 +311,7 @@ header,
 }
 
 /* =========================================
-   7. RESPONSIVE MEDIA QUERIES
+   7. RESPONSIVE MEDIA QUERIES (Original)
    ========================================= */
 
 /* Tablet and Desktop (min-width: 768px) */
@@ -436,4 +438,60 @@ header,
 .home-hero-spacer {
   padding-top: 535px;
   padding-bottom: 100px;
+}
+
+/* =========================================
+   10. MOBILE RESPONSIVE RESET (THE FIX)
+   ========================================= */
+
+@media (max-width: 991px) {
+  /* 1. Force Containers to be Full Width (Overrides the 200px padding) */
+  html,
+  body {
+    overflow-x: hidden; /* Stop side-scrolling */
+    width: 100%;
+  }
+
+  header,
+  .navbar {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .container,
+  .container-fluid,
+  .page-content,
+  .main-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* 2. Fix the Header/Title Text size */
+  h1,
+  .page-title,
+  .display-1,
+  .display-2,
+  .display-3 {
+    font-size: 2.2rem !important;
+    word-wrap: break-word;
+    line-height: 1.2;
+  }
+
+  /* 3. Fix Lead Paragraphs */
+  p.lead,
+  .content-body p {
+    font-size: 1rem !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* 4. Adjust the Top Spacing for Fixed Header */
+  .page-content {
+    padding-top: 100px !important;
+    padding-bottom: 50px !important;
+  }
 }

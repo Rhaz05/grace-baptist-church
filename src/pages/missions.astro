@@ -1,0 +1,158 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+const missions = [
+    {
+        id: 1,
+        title: "Local Community Outreach",
+        location: "City Center",
+        desc: "Our local outreach program focuses on feeding the homeless and providing essential supplies to families in need within our city.",
+        imageIcon: "fa-solid:users", 
+        updates: [
+            { title: "Current Needs", content: "We are currently collecting canned goods, warm coats, and hygiene products." },
+            { title: "Volunteer Opportunities", content: "Join us every Saturday morning at 9:00 AM." }
+        ]
+    },
+    {
+        id: 2,
+        title: "Church Planting Ministry",
+        location: "Regional",
+        desc: "Equipping pastors and leaders to plant new churches in underserved rural areas.",
+        imageIcon: "fa-solid:church",
+        updates: [
+            { title: "New Plant Launched", content: "We successfully launched a new fellowship in the northern district." }
+        ]
+    }
+];
+---
+
+<MainLayout title="Missions">
+    
+    <div class="container page-content">
+        
+        <section class="text-center mb-5 fade-in-up">
+            <h1 class="text-uppercase fw-bold page-title">Our Missions</h1>
+            <p class="lead ">Going into all the world to share the Gospel and serve others.</p>
+        </section>
+
+        <section class="mb-5 fade-in-up" style="animation-delay: 0.1s;">
+            <div class="bg-white p-4 p-md-5 rounded-4 shadow-sm text-center">
+                <Icon name="fa-solid:heart" class="text-danger mb-3" size="3rem" />
+                <h2 class="fw-bold text-dark">The Great Commission</h2>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-lg-8">
+                        <p class="text-muted fs-5">
+                            "Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit."
+                        </p>
+                        <p class="text-secondary small text-uppercase fw-bold">— Matthew 28:19</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mission-list fade-in-up" style="animation-delay: 0.2s;">
+            
+            {missions.map((mission) => (
+                <div class="mission-card bg-white rounded-4 shadow-sm overflow-hidden mb-4">
+                    <div class="row g-0">
+                        
+                        <div class="col-lg-4 d-flex align-items-center justify-content-center bg-light position-relative" style="min-height: 250px;">
+                            <div class="text-center text-secondary opacity-50">
+                                <Icon name={mission.imageIcon} size="5rem" class="mb-3" />
+                                <h5 class="fw-bold text-uppercase small ls-1">Mission Photo</h5>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 p-4 p-md-5 d-flex flex-column">
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h3 class="fw-bold text-dark mb-1">{mission.title}</h3>
+                                    <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">
+                                        <Icon name="fa-solid:map-marker-alt" class="me-1" /> {mission.location}
+                                    </span>
+                                </div>
+                                <hr class="my-3 opacity-10" />
+                                <p class="text-muted" style="line-height: 1.8;">{mission.desc}</p>
+                            </div>
+
+                            <div class="mt-auto pt-3">
+                                {mission.updates.map((update) => (
+                                    <details class="custom-accordion mb-2">
+                                        <summary class="accordion-header d-flex align-items-center justify-content-between p-3 rounded-3 cursor-pointer">
+                                            <span class="fw-bold text-dark d-flex align-items-center">
+                                                <Icon name="fa-solid:info-circle" class="text-danger me-2" />
+                                                {update.title}
+                                            </span>
+                                            <Icon name="fa-solid:chevron-down" class="accordion-icon text-secondary" />
+                                        </summary>
+                                        <div class="accordion-body p-3 text-secondary bg-light rounded-bottom-3 border-top-0">
+                                            {update.content}
+                                        </div>
+                                    </details>
+                                ))}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            ))}
+
+        </section>
+
+    </div>
+</MainLayout>
+
+<style>
+    .page-content { padding-top: 140px; padding-bottom: 80px; }
+    .ls-1 { letter-spacing: 1px; }
+
+    .fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(20px); }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    .mission-card {
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .mission-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1) !important;
+    }
+
+    .cursor-pointer { cursor: pointer; }
+    
+    details > summary { list-style: none; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    .custom-accordion {
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+    }
+
+    .accordion-header {
+        background-color: #f8f9fa;
+        transition: background 0.2s ease;
+        user-select: none;
+    }
+    .accordion-header:hover { background-color: #f1f3f5; }
+
+    .accordion-icon { transition: transform 0.3s ease; font-size: 0.9rem; }
+
+    details[open] .accordion-icon { transform: rotate(180deg); color: #8B0000 !important; }
+    
+    details[open] .accordion-header {
+        background-color: white;
+        color: #8B0000 !important;
+        border-bottom: 1px solid #e0e0e0;
+        border-radius: 12px 12px 0 0;
+    }
+
+    details[open] {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-color: #d0d0d0;
+    }
+
+    .accordion-body { font-size: 0.95rem; line-height: 1.6; border-radius: 0 0 12px 12px; }
+</style>

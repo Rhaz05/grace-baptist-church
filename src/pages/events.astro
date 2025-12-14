@@ -1,0 +1,319 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+// --- PLACEHOLDER DATA ---
+const upcomingEvents = [
+  {
+    id: 1,
+    title: "Community Worship Night",
+    date: "2023-10-25",
+    time: "7:00 PM - 9:00 PM",
+    location: "Main Sanctuary",
+    description: "A special evening of extended praise, worship, and prayer for our community."
+  },
+  {
+    id: 2,
+    title: "Fall Family Picnic",
+    date: "2023-10-28",
+    time: "11:00 AM - 2:00 PM",
+    location: "City Park Pavilion",
+    description: "Bring a side dish to share! Games, food, and fellowship for all ages."
+  },
+  {
+    id: 3,
+    title: "Youth Lock-In",
+    date: "2023-11-03",
+    time: "8:00 PM Friday - 8:00 AM Saturday",
+    location: "Youth Center",
+    description: "An overnight event for grades 7-12 with games, movies, and devotionals."
+  },
+  {
+    id: 4,
+    title: "Mens Prayer Breakfast",
+    date: "2023-11-11",
+    time: "7:30 AM - 9:00 AM",
+    location: "Fellowship Hall",
+    description: "Join us for a hearty breakfast and a time of prayer and fellowship."
+  },
+  {
+    id: 5,
+    title: "Thanksgiving Service",
+    date: "2023-11-23",
+    time: "10:00 AM - 11:30 AM",
+    location: "Main Sanctuary",
+    description: "A special service dedicating time to give thanks for God's blessings."
+  },
+  {
+    id: 6,
+    title: "Christmas Choir Rehearsal",
+    date: "2023-11-30",
+    time: "6:30 PM - 8:30 PM",
+    location: "Music Room",
+    description: "First rehearsal for the annual Christmas Cantata. All voices welcome!"
+  }
+];
+
+function getDateParts(dateString: string) {
+    const date = new Date(dateString);
+    return {
+        month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
+        day: date.getDate().toString()
+    };
+}
+---
+
+<MainLayout title="Events Calendar">
+    
+    <div class="container page-content">
+        
+        <section class="text-center mb-5 fade-in-up">
+            <h1 class="text-uppercase fw-bold page-title">Church Events</h1>
+            <p class="lead ">Stay connected with what's happening in our community.</p>
+        </section>
+
+        <section class="mb-5 fade-in-up" style="animation-delay: 0.1s;">
+            <div class="d-flex justify-content-center">
+                
+                <div class="calendar-card bg-white rounded-4 shadow-lg p-3 p-md-4 w-100">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <button id="prevMonthBtn" class="nav-btn">
+                            <Icon name="fa-solid:chevron-left" />
+                        </button>
+                        <h4 class="fw-bold text-dark mb-0 text-uppercase ls-1" id="currentMonthYear" style="font-size: 1.1rem;">Loading...</h4>
+                        <button id="nextMonthBtn" class="nav-btn">
+                            <Icon name="fa-solid:chevron-right" />
+                        </button>
+                    </div>
+
+                    <div class="calendar-grid-header mb-2 text-secondary text-uppercase text-center">
+                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                    </div>
+
+                    <div id="calendar-grid" class="calendar-grid">
+                        </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <section class="my-5 fade-in-up" style="animation-delay: 0.2s;">
+            <div class="d-flex align-items-center mb-4">
+                 <Icon name="fa-solid:calendar-alt" class="text-danger me-3" size="2rem" />
+                <h2 class="fw-bold text-white mb-0">Upcoming Events</h2>
+            </div>
+            
+            <div class="event-grid">
+                {upcomingEvents.map((event) => {
+                    const { month, day } = getDateParts(event.date);
+                    return (
+                    <div class="event-card bg-white rounded-4 shadow-sm overflow-hidden h-100 d-flex flex-column">
+                        <div class="p-4 d-flex h-100">
+                            <div class="date-badge me-3 flex-shrink-0 text-center rounded-3 overflow-hidden">
+                                <div class="bg-danger text-white small fw-bold py-1 px-2 text-uppercase">{month}</div>
+                                <div class="bg-light text-dark fs-3 fw-bold py-2">{day}</div>
+                            </div>
+                            
+                            <div class="flex-grow-1">
+                                <h5 class="fw-bold text-dark mb-2">{event.title}</h5>
+                                <div class="text-muted small mb-3">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <Icon name="fa-solid:clock" class="me-2 opacity-50" /> {event.time}
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <Icon name="fa-solid:map-marker-alt" class="me-2 opacity-50" /> {event.location}
+                                    </div>
+                                </div>
+                                <p class="text-secondary mb-0 small clamp-2">{event.description}</p>
+                            </div>
+                        </div>
+                        <div class="bg-light p-3 text-center border-top mt-auto">
+                             <a href="#" class="text-danger fw-bold text-decoration-none small text-uppercase ls-1">View Details</a>
+                         </div>
+                    </div>
+                    )
+                })}
+            </div>
+        </section>
+
+    </div>
+</MainLayout>
+
+<style>
+    /* =========================================
+       1. GLOBAL LAYOUT ANIMATION
+       ========================================= */
+    .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(20px); }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    .ls-1 { letter-spacing: 1px; }
+
+    /* =========================================
+       2. COMPACT CALENDAR CSS
+       ========================================= */
+    .calendar-card { 
+        border: 1px solid rgba(0,0,0,0.05); 
+        max-width: 450px;
+        margin: 0 auto;  
+    }
+
+    /* Navigation Buttons */
+    .nav-btn {
+        width: 35px; height: 35px;
+        border-radius: 50%;
+        border: none;
+        background: #f1f3f5;
+        color: #555;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.2s;
+    }
+    .nav-btn:hover { background: #e9ecef; color: #8B0000; }
+
+    .calendar-grid-header,
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr); 
+        gap: 6px; 
+    }
+
+    .calendar-grid-header div {
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    :global(.calendar-day) {
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px; 
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+        background: #f8f9fa;
+    }
+
+    :global(.calendar-day:hover:not(.empty)) {
+        background: #eee;
+        border-color: #ddd;
+    }
+
+    :global(.calendar-day.today) {
+        background: #8B0000 !important;
+        color: white !important;
+        box-shadow: 0 4px 10px rgba(139, 0, 0, 0.3);
+    }
+    
+    :global(.calendar-day.empty) {
+        background: transparent;
+        cursor: default;
+    }
+
+    /* =========================================
+       3. UPCOMING EVENT CARDS
+       ========================================= */
+    .event-grid {
+        display: grid;
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+        .event-grid { grid-template-columns: repeat(2, 1fr); } 
+    }
+
+    @media (min-width: 992px) {
+        .event-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .event-card {
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+    }
+
+    .date-badge {
+        border: 1px solid #e0e0e0;
+        width: 70px;
+    }
+
+    .clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+       .calendar-grid { gap: 4px; }
+       :global(.calendar-day) { border-radius: 6px; font-size: 0.85rem; }
+    }
+</style>
+
+<script>
+    document.addEventListener("astro:page-load", () => {
+        const grid = document.getElementById("calendar-grid");
+        const monthYearLabel = document.getElementById("currentMonthYear");
+        const prevBtn = document.getElementById("prevMonthBtn");
+        const nextBtn = document.getElementById("nextMonthBtn");
+
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        function renderCalendar(month: number, year: number) {
+            if (!grid || !monthYearLabel) return;
+            grid.innerHTML = ""; 
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            monthYearLabel.innerText = `${monthNames[month]} ${year}`;
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay(); 
+            const daysInMonth = new Date(year, month + 1, 0).getDate(); 
+
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const emptyCell = document.createElement("div");
+                emptyCell.className = "calendar-day empty";
+                grid.appendChild(emptyCell);
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayCell = document.createElement("div");
+                dayCell.className = "calendar-day";
+                dayCell.innerText = i.toString();
+
+                if (isCurrentMonth && i === today.getDate()) {
+                    dayCell.classList.add("today");
+                }
+
+                grid.appendChild(dayCell);
+            }
+        }
+
+        prevBtn?.addEventListener("click", () => {
+            currentMonth--;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        nextBtn?.addEventListener("click", () => {
+            currentMonth++;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        renderCalendar(currentMonth, currentYear);
+    });
+</script>
