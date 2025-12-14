@@ -276,7 +276,12 @@ const alphabet = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     }
 
     document.addEventListener("astro:page-load", () => {
-        const DATA_URL = "/data/music.json";
+        // --- FIX STARTS HERE ---
+        // Dynamically build the path to the JSON file
+        const base = import.meta.env.BASE_URL;
+        const path = base.endsWith('/') ? "data/music.json" : "/data/music.json";
+        const DATA_URL = base + path;
+        // --- FIX ENDS HERE ---
         
         let allSongs: Song[] = [];
         let currentFilter = "all"; 
@@ -396,6 +401,7 @@ const alphabet = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
         const init = async () => {
             try {
+                // Fetch using the corrected path
                 const res = await fetch(DATA_URL);
                 if(!res.ok) throw new Error("Data fetch failed");
                 allSongs = await res.json();

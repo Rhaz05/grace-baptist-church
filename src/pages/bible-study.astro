@@ -270,7 +270,9 @@ import { Icon } from 'astro-icon/components';
     }
 
     document.addEventListener("astro:page-load", () => {
-        const DATA_PATH = "/data/bible-study.json";
+        const base = import.meta.env.BASE_URL;
+        const path = base.endsWith('/') ? "data/bible-study.json" : "/data/bible-study.json";
+        const DATA_PATH = base + path;
         
         let allStudyData: BibleData | null = null;
         let currentContent: string | null = null;
