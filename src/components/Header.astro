@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+const base = import.meta.env.BASE_URL;
 ---
 
 <header>
@@ -8,7 +9,7 @@ import { Icon } from 'astro-icon/components';
             
             <a class="navbar-brand d-flex align-items-center m-0" href="/">
                 <div class="me-2 me-md-3">
-                    <img src="/img/TRANS_LOGO.png" alt="Grace Baptist Church" style="max-height: 50px; width: auto;">
+                    <img src={base + "img/TRANS LOGO.png"} alt="Grace Baptist Church Logo" style="max-height: 50px; width: auto;" />
                 </div>
                 <div class="d-flex flex-column justify-content-center lh-1">
                     <span class="fw-bold brand-text text-wrap">Grace Baptist Church</span>

@@ -1,0 +1,497 @@
+/* =========================================
+   1. GLOBAL RESET & BASE STYLES
+   ========================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Ubuntu', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Bootstrap Container Override - DESKTOP ONLY */
+/* This is what was crushing your mobile view. 
+   We keep it here for big screens, but override it below for mobile. */
+.container {
+  max-width: 100%;
+  padding-left: 200px;
+  padding-right: 200px;
+}
+
+/* =========================================
+   2. LAYOUT & BACKGROUNDS
+   ========================================= */
+
+/* Persistent Video Background */
+#video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -9999 !important; /* Force to very back */
+  pointer-events: none;
+}
+
+/* Main Content Wrapper */
+.main-container {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+/* =========================================
+   3. HEADER & NAVIGATION
+   ========================================= */
+
+/* Force Header to Front */
+header,
+.navbar {
+  position: relative;
+  z-index: 10000 !important;
+  padding-top: 25px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.navbar-custom {
+  background: transparent !important;
+  padding: 1rem 0;
+}
+
+.navbar-brand {
+  color: white !important;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+/* Logo Text Styles */
+.brand-text {
+  font-size: 1.1rem;
+  color: #8b0000; /* Dark Red */
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.brand-tagline {
+  font-size: 0.75rem;
+  color: #444; /* Slightly darker for visibility */
+  display: block;
+}
+
+/* Mobile Menu (Offcanvas) */
+.navbar-toggler-icon-custom {
+  color: darkred !important;
+  font-size: 1.5rem;
+}
+
+.offcanvas-custom {
+  background-color: rgba(139, 0, 0, 0.9) !important; /* Slight transparency */
+  color: white;
+  z-index: 10001 !important;
+}
+
+.offcanvas-title {
+  color: white;
+}
+
+.offcanvas-custom .nav-link {
+  color: white !important;
+  font-size: 1.1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.offcanvas-custom .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.offcanvas-custom .nav-link.active {
+  color: #ffec3e !important; /* Yellow highlight */
+  font-weight: bold;
+}
+
+/* =========================================
+   4. COMPONENT STYLES (Buttons, Cards)
+   ========================================= */
+
+/* Red Buttons */
+.btn-red {
+  background-color: darkred !important;
+  color: white !important;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-red:hover {
+  background-color: #a52a2a !important; /* Lighten on hover */
+  transform: translateY(-2px);
+}
+
+/* Outline Red Buttons */
+.btn-outline-red {
+  background-color: transparent;
+  color: darkred !important;
+  border: 2px solid darkred !important;
+  padding: 12px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-outline-red:hover {
+  background-color: darkred !important;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+/* Pagination */
+.page-item.active .page-link {
+  background-color: darkred;
+  border-color: darkred;
+}
+
+.page-item .page-link {
+  color: darkred;
+}
+
+.page-item .page-link:hover {
+  color: white;
+  background-color: darkred;
+  border-color: darkred;
+}
+
+/* =========================================
+   5. PAGE SECTIONS
+   ========================================= */
+
+/* Hero Section */
+.hero-accent {
+  width: 30px;
+  height: 100px;
+  background-color: darkred !important;
+  margin-right: 15px;
+  display: inline-block;
+}
+
+.text-holder {
+  color: white;
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Added readability shadow */
+}
+
+/* Quick Info Section */
+.quick-info-section {
+  background-color: #fff;
+  padding: 4rem 0;
+}
+
+.divider-line {
+  width: 60px;
+  height: 2px;
+  background-color: darkred !important;
+  margin: 0 20px;
+}
+
+.quick-info-section h2 {
+  color: #333;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: bold;
+}
+
+.quick-info-section i {
+  color: #555 !important;
+  margin-bottom: 1rem;
+}
+
+/* Sermon Section */
+.sermon-section {
+  background-color: #f8f8f8;
+  padding: 4rem 0;
+}
+
+.latest-sermon-title,
+.sermon-title {
+  color: #333;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.video-placeholder {
+  background-color: #e0e0e0;
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-placeholder i {
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 4rem;
+}
+
+/* Events Section */
+.events-section {
+  background-color: #e8e8e8;
+  padding: 4rem 0;
+}
+
+.event-card {
+  background-color: #d1d1d1;
+  padding: 100px 0;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+}
+
+.event-icon {
+  width: 50%;
+  height: 50%;
+  margin: auto;
+  border: 2px solid #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  border-radius: 5px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* =========================================
+   6. FOOTER
+   ========================================= */
+.footer {
+  background-color: #555e66;
+  color: white;
+  padding: 3rem 0 2rem;
+}
+
+.footer-links a,
+.footer-social a {
+  color: white;
+  text-decoration: none;
+  margin: 0 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover,
+.footer-social a:hover {
+  color: darkred;
+}
+
+/* =========================================
+   7. RESPONSIVE MEDIA QUERIES (Original)
+   ========================================= */
+
+/* Tablet and Desktop (min-width: 768px) */
+@media (min-width: 768px) {
+  .brand-text {
+    font-size: 1.5rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.9rem;
+  }
+
+  /* Buttons are 75% width on large screens inside sermon section */
+  .sermon-section .btn-red,
+  .sermon-section .btn-outline-red {
+    width: 75%;
+  }
+}
+
+/* Mobile Devices (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Header Adjustments */
+  .navbar-brand {
+    margin-left: 0.5rem !important;
+  }
+  .navbar-toggler {
+    margin-right: 0.5rem !important;
+  }
+
+  /* Hero */
+  .hero-section {
+    padding: 80px 0 40px;
+  }
+  .hero-accent {
+    height: 80px;
+    margin-right: 10px;
+  }
+
+  /* Sections Padding */
+  .quick-info-section,
+  .sermon-section,
+  .events-section {
+    padding: 3rem 0;
+  }
+
+  /* Stack Buttons on Mobile */
+  .sermon-section .btn-red,
+  .sermon-section .btn-outline-red {
+    width: 100% !important;
+    display: block !important;
+    margin: 0 0 1rem 0 !important;
+  }
+
+  /* Events */
+  .event-card {
+    padding: 80px 20px;
+  }
+  .video-placeholder {
+    height: 300px;
+  }
+
+  /* Footer */
+  .footer-links a {
+    display: block;
+    margin: 0.5rem 0;
+  }
+}
+
+/* Small Mobile (max-width: 576px) */
+@media (max-width: 576px) {
+  .hero-accent {
+    height: 60px;
+    width: 20px;
+  }
+  .video-placeholder {
+    height: 250px;
+  }
+  .video-placeholder i {
+    font-size: 3rem;
+  }
+}
+
+/* =========================================
+   8. SCHEDULE TABLE STYLES
+   ========================================= */
+
+.schedule-header-red {
+  background-color: darkred;
+  color: white;
+  padding: 15px 20px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+.text-white-50 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* =========================================
+   9. GLOBAL UTILITIES (CLEANUP)
+   ========================================= */
+
+.page-content {
+  padding-top: 120px;
+  padding-bottom: 5rem;
+}
+
+.content-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  padding: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.home-hero-spacer {
+  padding-top: 535px;
+  padding-bottom: 100px;
+}
+
+/* =========================================
+   10. MOBILE RESPONSIVE RESET (THE FIX)
+   ========================================= */
+
+@media (max-width: 991px) {
+  /* 1. Force Containers to be Full Width (Overrides the 200px padding) */
+  html,
+  body {
+    overflow-x: hidden; /* Stop side-scrolling */
+    width: 100%;
+  }
+
+  header,
+  .navbar {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .container,
+  .container-fluid,
+  .page-content,
+  .main-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* 2. Fix the Header/Title Text size */
+  h1,
+  .page-title,
+  .display-1,
+  .display-2,
+  .display-3 {
+    font-size: 2.2rem !important;
+    word-wrap: break-word;
+    line-height: 1.2;
+  }
+
+  /* 3. Fix Lead Paragraphs */
+  p.lead,
+  .content-body p {
+    font-size: 1rem !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* 4. Adjust the Top Spacing for Fixed Header */
+  .page-content {
+    padding-top: 100px !important;
+    padding-bottom: 50px !important;
+  }
+}

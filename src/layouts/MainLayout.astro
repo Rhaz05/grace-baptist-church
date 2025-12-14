@@ -3,7 +3,11 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 
+import '../styles/style.css';
+
 const { title } = Astro.props;
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <!DOCTYPE html>
@@ -17,8 +21,6 @@ const { title } = Astro.props;
     
     <script src="https://kit.fontawesome.com/91d5bebb50.js" crossorigin="anonymous"></script>
     
-    <link rel="stylesheet" href="/css/style.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
@@ -28,7 +30,7 @@ const { title } = Astro.props;
 <body>
 
     <video autoplay muted loop id="video-background" transition:persist>
-        <source src="/videos/sample_video_1.mp4" type="video/mp4">
+        <source src={base + "videos/sample_video_1.mp4"} type="video/mp4">
     </video>
 
     <Header transition:persist />
