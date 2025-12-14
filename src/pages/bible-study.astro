@@ -1,0 +1,484 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
+---
+
+<MainLayout title="Bible Study">
+    
+    <div class="container page-content">
+        
+        <section class="text-center mb-5 fade-in-up">
+            <h1 class="text-uppercase fw-bold text-white page-title">Bible Study</h1>
+            <p class="lead text-white-50">Deep dive into the scriptures with our guided series.</p>
+        </section>
+
+        <div class="row g-4">
+            
+            <div class="col-lg-4">
+                <div class="study-sidebar h-100">
+                    <div class="p-4">
+                        
+                        <div class="mb-4">
+                            <label for="selectStudy" class="form-label text-muted fw-bold small text-uppercase mb-2">
+                                <Icon name="fa-solid:book" class="me-1" /> Select Series
+                            </label>
+                            <select class="form-select" id="selectStudy">
+                                <option selected disabled>Loading Studies...</option>
+                            </select>
+                        </div>
+
+                        <hr class="separator my-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold text-dark m-0">Topics</h5>
+                            <span class="badge bg-light text-secondary border" id="topicCount">0</span>
+                        </div>
+                        
+                        <div class="topic-list-container" id="latestPostsList">
+                            <div class="p-3 text-muted small text-center bg-light rounded">
+                                Select a study series above to see topics.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="reading-card h-100 p-4 p-lg-5" id="mainContentCard">
+                    
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 pb-3 border-bottom header-area">
+                        <div class="mb-3 mb-md-0">
+                            <span class="badge badge-pill-red mb-2" id="studyChapterBadge">Series</span>
+                            <h2 class="h4 fw-bold mb-0 text-dark" id="mainStudyTitle">Select a Series</h2>
+                        </div>
+                        
+                        <nav aria-label="Page navigation" class="pagination-wrapper">
+                            <div class="pagination-container top-pagination d-flex gap-1"></div>
+                        </nav>
+                    </div>
+
+                    <div class="reading-area mb-4">
+                        <h1 class="fw-bold mb-4 display-6 text-dark" id="mainContentTitle">Welcome</h1>
+                        
+                        <div id="mainContentText" class="content-body">
+                            <div class="empty-state text-center py-5">
+                                <Icon name="fa-solid:book-reader" size="3rem" class="text-muted mb-3 opacity-25" />
+                                <p class="text-muted">Select a topic from the sidebar to begin reading.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <nav aria-label="Page navigation" class="mt-auto pt-4 border-top pagination-wrapper">
+                        <div class="pagination-container bottom-pagination d-flex justify-content-center gap-1"></div>
+                    </nav>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</MainLayout>
+
+<style>
+    /* =========================================
+       1. GLOBAL & LAYOUT
+       ========================================= */
+    :global(body) {
+        background-color: #f2f4f8;
+        color: #333;
+    }
+
+    .page-content {
+        padding-top: 140px; 
+        padding-bottom: 80px;
+    }
+
+    .fade-in {
+        animation: fadeIn 0.4s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =========================================
+       2. SIDEBAR STYLING
+       ========================================= */
+    .study-sidebar {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.05);
+        overflow: hidden; /* Keeps content inside rounded corners */
+    }
+
+    .separator {
+        border-top: 1px dashed #e0e0e0;
+    }
+
+    .form-select {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        padding: 0.7rem 1rem;
+        background-color: #f8f9fa;
+        cursor: pointer;
+        font-size: 0.95rem;
+    }
+    
+    .form-select:focus {
+        border-color: #8B0000;
+        box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+    }
+
+    /* === THE FIX FOR YOUR SCREENSHOT === */
+    /* This targets the generated links specifically */
+    :global(.topic-item) {
+        display: block;
+        padding: 15px;
+        margin-bottom: 8px;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #f0f0f0;
+        transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        cursor: pointer;
+        text-decoration: none !important; /* Removes blue underline */
+        color: #555;
+        position: relative;
+    }
+
+    :global(.topic-item:hover) {
+        background: #fdf2f2;
+        border-color: #f8d7da;
+        color: #8B0000;
+        transform: translateX(3px);
+    }
+
+    :global(.topic-item.active) {
+        background: #8B0000;
+        color: white !important;
+        border-color: #8B0000;
+        box-shadow: 0 4px 10px rgba(139, 0, 0, 0.2);
+    }
+
+    /* Title inside the link */
+    :global(.topic-item h6) {
+        font-weight: 700;
+        margin: 0 0 4px 0;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+    
+    /* Description inside the link */
+    :global(.topic-item small) {
+        opacity: 0.85;
+        font-size: 0.85rem;
+        display: block;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis; /* Adds "..." if text is too long */
+    }
+
+    /* =========================================
+       3. READING PANE
+       ========================================= */
+    .reading-card {
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .badge-pill-red {
+        background-color: #8B0000;
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .content-body {
+        font-family: 'Merriweather', 'Georgia', serif;
+        font-size: 1.15rem;
+        line-height: 1.85;
+        color: #2c3e50;
+    }
+    
+    :global(.content-body p) {
+        margin-bottom: 1.75rem;
+    }
+
+    /* =========================================
+       4. PAGINATION BUTTONS
+       ========================================= */
+    .pagination-wrapper {
+        display: none;
+    }
+
+    :global(.pagination-btn) {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        background: white;
+        color: #555;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0;
+        font-family: sans-serif;
+    }
+
+    :global(.pagination-btn:hover:not(:disabled)) {
+        border-color: #8B0000;
+        color: #8B0000;
+        background: #fff5f5;
+    }
+
+    :global(.pagination-btn.active) {
+        background-color: #8B0000;
+        color: white;
+        border-color: #8B0000;
+    }
+
+    :global(.pagination-btn:disabled) {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #f8f9fa;
+    }
+</style>
+
+<script>
+    // Interfaces
+    interface Post {
+        h: string;
+        d: string;
+        full_content: string;
+    }
+
+    interface Study {
+        id: number;
+        book: string;
+        chapter: string;
+        title: string;
+        posts: Post[];
+    }
+
+    interface BibleData {
+        title: string;
+        studies: Study[];
+    }
+
+    document.addEventListener("astro:page-load", () => {
+        const DATA_PATH = "/data/bible-study.json";
+        
+        let allStudyData: BibleData | null = null;
+        let currentContent: string | null = null;
+        
+        const ITEMS_PER_PAGE = 5; 
+        let totalPages = 0;
+        let currentPage = 1;
+
+        const selectElement = document.getElementById("selectStudy") as HTMLSelectElement;
+        const postsListElement = document.getElementById("latestPostsList");
+        const topicCountElement = document.getElementById("topicCount");
+        const mainStudyTitle = document.getElementById("mainStudyTitle");
+        const mainContentTitle = document.getElementById("mainContentTitle");
+        const mainContentText = document.getElementById("mainContentText");
+        const studyBadge = document.getElementById("studyChapterBadge");
+        const mainCard = document.getElementById("mainContentCard");
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderPaginationControls(activePage: number, total: number) {
+            const wrapperContainers = document.querySelectorAll(".pagination-wrapper") as NodeListOf<HTMLElement>;
+            const containerDivs = document.querySelectorAll(".pagination-container");
+
+            if (total <= 1) {
+                wrapperContainers.forEach(el => el.style.display = 'none');
+                return;
+            }
+
+            wrapperContainers.forEach(el => el.style.display = 'block');
+            currentPage = activePage;
+
+            containerDivs.forEach(container => {
+                container.innerHTML = ""; 
+
+                // Prev
+                const prevBtn = document.createElement("button");
+                prevBtn.type = "button";
+                prevBtn.className = "pagination-btn";
+                prevBtn.innerHTML = "&laquo;";
+                prevBtn.disabled = activePage === 1;
+                prevBtn.onclick = () => paginateContent(activePage - 1);
+                container.appendChild(prevBtn);
+
+                // Numbers
+                for (let i = 1; i <= total; i++) {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = `pagination-btn ${i === activePage ? 'active' : ''}`;
+                    btn.innerText = i.toString();
+                    btn.onclick = () => paginateContent(i);
+                    container.appendChild(btn);
+                }
+
+                // Next
+                const nextBtn = document.createElement("button");
+                nextBtn.type = "button";
+                nextBtn.className = "pagination-btn";
+                nextBtn.innerHTML = "&raquo;";
+                nextBtn.disabled = activePage === total;
+                nextBtn.onclick = () => paginateContent(activePage + 1);
+                container.appendChild(nextBtn);
+            });
+        }
+
+        function paginateContent(page: number) {
+            if (!currentContent || !mainContentText) return;
+
+            mainContentText.classList.remove('fade-in');
+            void mainContentText.offsetWidth; // Reflow
+
+            const paragraphs = currentContent
+                .split("\n")
+                .map((p) => p.trim())
+                .filter((p) => p.length > 0);
+
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pageContent = paragraphs.slice(startIndex, endIndex);
+
+            const htmlContent = pageContent.map((p) => `<p>${p}</p>`).join("");
+            mainContentText.innerHTML = htmlContent;
+            
+            mainContentText.classList.add('fade-in');
+
+            renderPaginationControls(page, totalPages);
+
+            if(mainCard) {
+                 mainCard.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function setContentAndPaginate(title: string, content: string) {
+            if (mainContentTitle) {
+                mainContentTitle.innerText = title;
+                mainContentTitle.classList.remove('fade-in');
+                void mainContentTitle.offsetWidth;
+                mainContentTitle.classList.add('fade-in');
+            }
+
+            currentContent = content;
+            const paragraphs = content.split("\n").map(p => p.trim()).filter(p => p.length > 0);
+            totalPages = Math.ceil(paragraphs.length / ITEMS_PER_PAGE);
+            paginateContent(1);
+        }
+
+        function handlePostClick(e: Event) {
+            e.preventDefault();
+            const link = (e.currentTarget as HTMLElement);
+            
+            const allLinks = postsListElement?.querySelectorAll('a');
+            allLinks?.forEach(el => el.classList.remove('active'));
+            
+            link.classList.add('active');
+
+            const title = link.getAttribute('data-title') || "";
+            const content = link.getAttribute('data-content') || "";
+
+            if (content) {
+                setContentAndPaginate(title, content);
+            }
+        }
+
+        function renderLatestPosts(posts: Post[]) {
+            if (!postsListElement) return;
+            postsListElement.innerHTML = "";
+
+            if (posts && posts.length) {
+                if(topicCountElement) topicCountElement.innerText = posts.length.toString();
+                
+                posts.forEach((post) => {
+                    // Create an Anchor tag, but styled as a block card
+                    const a = document.createElement('a');
+                    a.href = "#"; 
+                    a.className = "topic-item"; // Matches CSS class
+                    a.setAttribute('data-content', post.full_content);
+                    a.setAttribute('data-title', post.h);
+                    
+                    a.innerHTML = `
+                        <h6>${post.h}</h6>
+                        <small>${post.d}</small>
+                    `;
+                    
+                    a.addEventListener('click', handlePostClick);
+                    postsListElement.appendChild(a);
+                });
+            } else {
+                if(topicCountElement) topicCountElement.innerText = "0";
+                postsListElement.innerHTML = `<div class="p-3 text-muted text-center small">No topics available.</div>`;
+            }
+        }
+
+        function loadStudy(studyId: number) {
+            if (!allStudyData) return;
+            
+            const study = allStudyData.studies.find((s) => s.id == studyId);
+            if (study) {
+                if(mainStudyTitle) mainStudyTitle.innerText = `${study.book}: ${study.title}`;
+                if(studyBadge) studyBadge.innerText = `Chapter ${study.chapter}`;
+
+                renderLatestPosts(study.posts);
+
+                const firstLink = postsListElement?.querySelector('a');
+                if (firstLink) {
+                    (firstLink as HTMLElement).click();
+                }
+            }
+        }
+
+        async function initialize() {
+            try {
+                const response = await fetch(DATA_PATH);
+                if (!response.ok) throw new Error("Failed to load data");
+                
+                const data: BibleData = await response.json();
+                allStudyData = data;
+
+                selectElement.innerHTML = ""; 
+                data.studies.forEach((study) => {
+                    const option = document.createElement("option");
+                    option.value = study.id.toString();
+                    option.textContent = `${study.book} - ${study.title}`;
+                    selectElement.appendChild(option);
+                });
+
+                if (data.studies.length > 0) {
+                    selectElement.value = data.studies[0].id.toString();
+                    loadStudy(data.studies[0].id);
+                }
+
+            } catch (error) {
+                console.error(error);
+                if(mainContentText) mainContentText.innerHTML = "<p class='text-danger'>Error loading study data.</p>";
+            }
+        }
+
+        selectElement?.addEventListener("change", function() {
+            loadStudy(parseInt(this.value));
+        });
+
+        initialize();
+    });
+</script>
