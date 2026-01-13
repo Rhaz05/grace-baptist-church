@@ -1,41 +1,41 @@
 ---
 import { Icon } from 'astro-icon/components';
 const currentYear = new Date().getFullYear();
+const base = import.meta.env.BASE_URL;
 ---
 
 <footer class="site-footer">
     <div class="container text-center">
         
         <div class="footer-nav mb-4">
-            <a href="/about" class="footer-link">About Us</a>
-            <a href="/services" class="footer-link">Services</a>
-            <a href="/preaching" class="footer-link">Preaching</a>
-            <a href="/events" class="footer-link">Events</a>
-            <a href="/ministries" class="footer-link">Ministries</a>
-            <a href="/contact" class="footer-link">Contact</a>
+            <a href={base + "about"} class="footer-link">About Us</a>
+            <a href={base + "preaching"} class="footer-link">Preaching</a>
+            <a href={base + "events"} class="footer-link">Events</a>
+            <a href={base + "ministries"} class="footer-link">Ministries</a>
+            <a href={base + "contact"} class="footer-link">Contact</a>
         </div>
 
         <div class="footer-social mb-4">
-            <a href="#" aria-label="YouTube" class="social-icon">
+            <a href="https://www.youtube.com/@GRACEBAPTISTCHURCHLUCENA" aria-label="YouTube" class="social-icon">
                 <Icon name="fa-brands:youtube" size="1.5rem" />
             </a>
-            <a href="#" aria-label="Facebook" class="social-icon">
+            <a href="https://www.facebook.com/gracebaptistlucenacity" aria-label="Facebook" class="social-icon">
                 <Icon name="fa-brands:facebook-f" size="1.2rem" />
             </a>
-            <a href="#" aria-label="Instagram" class="social-icon">
+            <!-- <a href="#" aria-label="Instagram" class="social-icon">
                 <Icon name="fa-brands:instagram" size="1.5rem" />
             </a>
             <a href="#" aria-label="Twitter" class="social-icon">
                 <Icon name="fa-brands:twitter" size="1.3rem" />
-            </a>
+            </a> -->
         </div>
 
         <div class="footer-contact mb-4">
-            <p class="mb-1">123 Church Street, City, State 12345</p>
+            <p class="mb-1">Lot 1, Block 41 Citta Grande 3, Lucena City, 4301 Quezon</p>
             <p class="mb-1">
-                Phone: <a href="tel:5551234567">(555) 123-4567</a> 
+                Phone: <a href="tel:5551234567">042-784-4032</a> 
                 <span class="mx-2">•</span> 
-                Email: <a href="mailto:info@gracebaptist.org">info@gracebaptist.org</a>
+                Email: <a href="mailto:gracebaptistlucenacity@gmail.com">gracebaptistlucenacity@gmail.com</a>
             </p>
         </div>
 

@@ -9,14 +9,15 @@ import { Icon } from 'astro-icon/components';
         
         <section class="text-center mb-5">
             <h1 class="text-uppercase fw-bold">Preaching</h1>
-            <p class="lead">Egestas elit dui scelerisque ut eu purus aliquam vitae habitasse.</p>
+            <p class="lead">At Grace Baptist Church, we are committed to sharing the love and teachings of 
+                Jesus Christ with our community and beyond. </p>
         </section>
 
         <section class="content-card mb-5">
             <h4 class="fw-bold mb-4">Filter Sermons</h4>
             
             <div class="row g-3">
-                <div class="col-12">
+                <div class="col-8">
                     <label for="searchSermon" class="form-label text-muted">Search for Sermon</label>
                     <div class="input-group">
                         <input type="text" class="form-control" id="searchSermon" placeholder="Title or keyword...">
@@ -25,15 +26,8 @@ import { Icon } from 'astro-icon/components';
                         </span>
                     </div>
                 </div>
-
-                <div class="col-md-6">
-                    <label for="bookSelect" class="form-label text-muted">Book of the Bible</label>
-                    <select class="form-select" id="bookSelect">
-                        <option selected value="-Any-">-Any-</option>
-                    </select>
-                </div>
-
-                <div class="col-md-6">
+                
+                <div class="col-md-4">
                     <label for="dateSelect" class="form-label text-muted">Date</label>
                     <input type="date" class="form-control" id="dateSelect">
                 </div>
@@ -59,9 +53,6 @@ import { Icon } from 'astro-icon/components';
 </MainLayout>
 
 <style>
-    /* =========================================
-       2. MODERN CARD STYLES
-       ========================================= */
     :global(.sermon-card), 
     .content-card {
         background: #ffffff;
@@ -80,9 +71,6 @@ import { Icon } from 'astro-icon/components';
         box-shadow: 0 20px 50px rgba(139, 0, 0, 0.15); 
     }
 
-    /* =========================================
-       3. SERMON CARD INTERNALS
-       ========================================= */
     :global(.sermon-card-image) {
         height: 200px;
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -126,7 +114,6 @@ import { Icon } from 'astro-icon/components';
         line-height: 1.3;
     }
 
-    /* Modern Tags for Book/Date */
     :global(.meta-tag) {
         font-size: 0.75rem;
         font-weight: 700;
@@ -141,9 +128,6 @@ import { Icon } from 'astro-icon/components';
         align-self: flex-start;
     }
 
-    /* =========================================
-       4. INPUT FIELDS (FILTERS)
-       ========================================= */
     .form-control, .form-select {
         border-radius: 12px; 
         border: 1px solid #e0e0e0;
@@ -165,9 +149,6 @@ import { Icon } from 'astro-icon/components';
         background: white;
     }
 
-    /* =========================================
-       5. BUTTONS
-       ========================================= */
     :global(.btn-red) {
         background-color: #8B0000;
         color: white;
@@ -239,17 +220,15 @@ import { Icon } from 'astro-icon/components';
         date: string;
         hasAudio: boolean;
         hasVideo: boolean;
+        videoLink?: string; 
+        thumbnail?: string; 
     }
 
     document.addEventListener("astro:page-load", () => {
-        const base = import.meta.env.BASE_URL;
-        
-        const path = base.endsWith('/') ? "data/preaching.json" : "/data/preaching.json";
-        const sermonDataUrl = base + path;
+        const sermonDataUrl = "/api/sermons.json"; 
 
         const cardsContainer = document.getElementById("sermon-grid");
         const paginationContainer = document.getElementById("pagination");
-        
         const searchInput = document.getElementById("searchSermon") as HTMLInputElement;
         const bookSelect = document.getElementById("bookSelect") as HTMLSelectElement;
         const dateInput = document.getElementById("dateSelect") as HTMLInputElement;
@@ -265,9 +244,7 @@ import { Icon } from 'astro-icon/components';
         const populateBookOptions = (sermons: Sermon[]) => {
             if (!bookSelect) return;
             const books = new Set(sermons.map((s) => s.book).filter((b) => b));
-            
             bookSelect.innerHTML = '<option selected value="-Any-">-Any-</option>';
-
             books.forEach((book) => {
                 const option = document.createElement("option");
                 option.value = book;
@@ -282,11 +259,19 @@ import { Icon } from 'astro-icon/components';
                 ? "Date Unavailable"
                 : dateObj.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 
+            const imageContent = sermon.thumbnail 
+                ? `<img src="${sermon.thumbnail}" alt="${sermon.title}" style="width:100%; height:100%; object-fit:cover;">`
+                : `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="currentColor" d="M149.1 108.6c-46 0-83.3 37.3-83.3 83.3c0 46 37.3 83.3 83.3 83.3c46 0 83.3-37.3 83.3-83.3c0-46-37.3-83.3-83.3-83.3m0 132.6c-27.2 0-49.3-22.1-49.3-49.3s22.1-49.3 49.3-49.3s49.3 22.1 49.3 49.3s-22.1 49.3-49.3 49.3M397.9 237l-56.1-57.1l-63.5 63.7l-82.6-72.9l-123.6 142h375zM48 276.5l98.3-113l75.6 66.8l65.6-65.9l80.2 81.6H84.1z"/><path fill="currentColor" d="M448 32H64C28.6 32 0 60.6 0 96v320c0 35.4 28.6 64 64 64h384c35.4 0 64-28.6 64-64V96c0-35.4-28.6-64-64-64m30 384c0 16.5-13.5 30-30 30H64c-16.5 0-30-13.5-30-30V96c0-16.5 13.5-30 30-30h384c16.5 0 30 13.5 30 30z"/></svg>`;
+
+            const watchButton = sermon.videoLink 
+                ? `<a href="${sermon.videoLink}" target="_blank" class="btn btn-sm btn-outline-red flex-fill py-2"><i class="fas fa-video me-2"></i>Watch</a>`
+                : (sermon.hasVideo ? `<a href="#" class="btn btn-sm btn-outline-red flex-fill py-2"><i class="fas fa-video me-2"></i>Watch</a>` : '');
+
             return `
                 <div class="col">
                     <div class="sermon-card">
                         <div class="sermon-card-image">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="currentColor" d="M149.1 108.6c-46 0-83.3 37.3-83.3 83.3c0 46 37.3 83.3 83.3 83.3c46 0 83.3-37.3 83.3-83.3c0-46-37.3-83.3-83.3-83.3m0 132.6c-27.2 0-49.3-22.1-49.3-49.3s22.1-49.3 49.3-49.3s49.3 22.1 49.3 49.3s-22.1 49.3-49.3 49.3M397.9 237l-56.1-57.1l-63.5 63.7l-82.6-72.9l-123.6 142h375zM48 276.5l98.3-113l75.6 66.8l65.6-65.9l80.2 81.6H84.1z"/><path fill="currentColor" d="M448 32H64C28.6 32 0 60.6 0 96v320c0 35.4 28.6 64 64 64h384c35.4 0 64-28.6 64-64V96c0-35.4-28.6-64-64-64m30 384c0 16.5-13.5 30-30 30H64c-16.5 0-30-13.5-30-30V96c0-16.5 13.5-30 30-30h384c16.5 0 30 13.5 30 30z"/></svg>
+                            ${imageContent}
                         </div>
                         <div class="sermon-card-body">
                             <div class="meta-tag">
@@ -306,7 +291,7 @@ import { Icon } from 'astro-icon/components';
                             
                             <div class="d-flex gap-2 mt-auto">
                                 ${sermon.hasAudio ? `<a href="#" class="btn btn-sm btn-red flex-fill py-2"><i class="fas fa-headphones me-2"></i>Listen</a>` : ''}
-                                ${sermon.hasVideo ? `<a href="#" class="btn btn-sm btn-outline-red flex-fill py-2"><i class="fas fa-video me-2"></i>Watch</a>` : ''}
+                                ${watchButton}
                             </div>
                         </div>
                     </div>
@@ -317,23 +302,20 @@ import { Icon } from 'astro-icon/components';
         const renderCards = () => {
             if (!cardsContainer) return;
             cardsContainer.innerHTML = "";
-
             const start = (currentPage - 1) * cardsPerPage;
             const end = start + cardsPerPage;
             const sermonsToRender = filteredSermons.slice(start, end);
-
             if (sermonsToRender.length === 0) {
                 cardsContainer.innerHTML = '<p class="text-center text-muted w-100 p-5">No sermons found matching your criteria.</p>';
                 return;
             }
-
             sermonsToRender.forEach((sermon) => {
                 cardsContainer.insertAdjacentHTML("beforeend", createSermonCard(sermon));
             });
         };
 
         const renderPagination = () => {
-            if (!paginationContainer) return;
+             if (!paginationContainer) return;
             paginationContainer.innerHTML = "";
             const totalPages = Math.ceil(filteredSermons.length / cardsPerPage);
 
@@ -360,7 +342,7 @@ import { Icon } from 'astro-icon/components';
                 li.appendChild(a);
                 paginationContainer.appendChild(li);
             }
-        };
+        }
 
         const applyFilters = () => {
             const searchText = searchInput ? searchInput.value.toLowerCase() : "";
@@ -381,12 +363,13 @@ import { Icon } from 'astro-icon/components';
             renderPagination();
         };
 
-        if (searchButton) searchButton.addEventListener("click", (e) => { e.preventDefault(); applyFilters(); });
+         if (searchButton) searchButton.addEventListener("click", (e) => { e.preventDefault(); applyFilters(); });
         if (searchInput) searchInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter") { e.preventDefault(); applyFilters(); }
         });
         if (bookSelect) bookSelect.addEventListener("change", applyFilters);
         if (dateInput) dateInput.addEventListener("change", applyFilters);
+
 
         const initialize = async () => {
             try {
