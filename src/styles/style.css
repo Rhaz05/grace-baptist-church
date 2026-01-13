@@ -188,7 +188,7 @@ header,
 /* Hero Section */
 .hero-accent {
   width: 30px;
-  height: 100px;
+  height: 150px;
   background-color: darkred !important;
   margin-right: 15px;
   display: inline-block;
@@ -428,7 +428,7 @@ header,
 }
 
 .home-hero-spacer {
-  padding-top: 535px;
+  padding-top: 420px;
   padding-bottom: 100px;
 }
 
