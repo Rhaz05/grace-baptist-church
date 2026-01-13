@@ -4,6 +4,8 @@ import Footer from '../components/Footer.astro';
 import { ClientRouter } from 'astro:transitions';
 
 const { title } = Astro.props;
+import '../styles/style.css';
+const base = import.meta.env.BASE_URL;
 ---
 
 <!DOCTYPE html>
@@ -13,11 +15,10 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} | Grace Baptist Church</title>
     
+    <link rel="icon" type="image/png" href={base + "/img/church_logo.png"}>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     
     <script src="https://kit.fontawesome.com/91d5bebb50.js" crossorigin="anonymous"></script>
-    
-    <link rel="stylesheet" href="/css/style.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +29,7 @@ const { title } = Astro.props;
 <body>
 
     <video autoplay muted loop id="video-background" transition:persist>
-        <source src="/videos/sample_video_1.mp4" type="video/mp4">
+        <source src={base + "videos/sample_video_1.mp4"} type="video/mp4">
     </video>
 
     <Header transition:persist />

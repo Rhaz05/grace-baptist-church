@@ -47,11 +47,11 @@ import { Icon } from 'astro-icon/components';
         </section>
 
         <div id="sermon-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            </div>
+        </div>
 
         <nav aria-label="Sermon page navigation" class="mt-5">
             <ul id="pagination" class="pagination justify-content-center">
-                </ul>
+            </ul>
         </nav>
 
     </div>
@@ -59,7 +59,6 @@ import { Icon } from 'astro-icon/components';
 </MainLayout>
 
 <style>
-
     /* =========================================
        2. MODERN CARD STYLES
        ========================================= */
@@ -243,7 +242,11 @@ import { Icon } from 'astro-icon/components';
     }
 
     document.addEventListener("astro:page-load", () => {
-        const sermonDataUrl = "/data/preaching.json";
+        const base = import.meta.env.BASE_URL;
+        
+        const path = base.endsWith('/') ? "data/preaching.json" : "/data/preaching.json";
+        const sermonDataUrl = base + path;
+
         const cardsContainer = document.getElementById("sermon-grid");
         const paginationContainer = document.getElementById("pagination");
         
