@@ -199,7 +199,7 @@ header,
   font-size: clamp(1.8rem, 4vw, 3.5rem);
   font-weight: bold;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Added readability shadow */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Quick Info Section */
@@ -230,14 +230,6 @@ header,
 .sermon-section {
   background-color: #f8f8f8;
   padding: 4rem 0;
-}
-
-.latest-sermon-title,
-.sermon-title {
-  color: #333;
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  font-weight: bold;
-  margin-bottom: 1rem;
 }
 
 .video-placeholder {
