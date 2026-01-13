@@ -142,29 +142,31 @@ const base = import.meta.env.BASE_URL;
     }
 </style>
 <script>
-    function setupOffcanvas() {
-        const trigger = document.getElementById('bibleStudyTrigger');
-        const offcanvasElement = document.getElementById('offcanvasRight');
+function setupOffcanvas() {
+    const trigger = document.getElementById('bibleStudyTrigger');
+    const offcanvasElement = document.getElementById('offcanvasRight');
 
-        if (trigger && offcanvasElement) {
-            trigger.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+    if (trigger && offcanvasElement) {
+        trigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const targetId = this.getAttribute('data-bs-target');
+
+            if (!targetId) return; 
+
+            const targetEl = document.querySelector(targetId);
+
+            if (targetEl && (window as any).bootstrap) {
+                const bootstrap = (window as any).bootstrap;
+                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(targetEl);
+                bsCollapse.toggle();
                 
-                const targetId = this.getAttribute('data-bs-target');
-                const targetEl = document.querySelector(targetId);
-
-                if ((window as any).bootstrap) {
-                    const bootstrap = (window as any).bootstrap;
-                    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(targetEl);
-                    bsCollapse.toggle();
-                    
-                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                    this.setAttribute('aria-expanded', (!isExpanded).toString());
-                }
-            }, true); 
-        }
+                const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                this.setAttribute('aria-expanded', (!isExpanded).toString());
+            }
+        }, true); 
     }
-
+}
     document.addEventListener("astro:page-load", setupOffcanvas);
 </script>
