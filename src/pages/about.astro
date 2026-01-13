@@ -16,18 +16,18 @@ import { Icon } from 'astro-icon/components';
             <div class="row align-items-center">
                 <div class="col-lg-7">
                     <h2 class="fw-bold text-dark">Our History</h2>
-                    <p class="text-secondary mb-4">A legacy of faith and community</p>
+                    <p class="text-secondary mb-4 fst-italic">A legacy of faith and community</p>
                     <p class="mb-4 text-muted">
                         Body text for your whole article or post. We'll put in some lorem ipsum for now to 
                         show how a filled-out page might look.
                     </p>
-                    <p class="small text-muted">
+                    <p class="small text-muted border-start border-3 border-danger ps-3">
                         Excepteur efficient emerging, minim veniam enim aute carefully curated Ginza conversation.
                     </p>
                 </div>
-                <div class="col-lg-5 mt-4 mt-lg-0">
-                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
-                        <Icon name="fa-regular:play-circle" size="4rem" class="text-secondary" />
+                <div class="col-lg-5">
+                    <div class="bg-light h-100 min-h-300 d-flex align-items-center justify-content-center">
+                        <Icon name="fa-regular:play-circle" size="4rem" class="text-secondary opacity-50" />
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@ import { Icon } from 'astro-icon/components';
         <section>
             <div class="mb-5 mx-3">
                 <div class="schedule-header-red">SUNDAYS</div>
-                <div class="row row-cols-1 row-cols-md-3 g-0 bg-white border rounded-bottom shadow-sm">
+                <div class="row row-cols-1 row-cols-md-3 g-0 bg-white border border-top-0 rounded-bottom shadow-sm">
                     <div class="col p-4 p-md-5 border-end">
                         <h4 class="h5 mb-2 text-dark d-flex align-items-center">
                             <Icon name="fa-solid:info-circle" class="text-danger me-2" /> 9:00 AM
@@ -71,25 +71,51 @@ import { Icon } from 'astro-icon/components';
 
             <div class="mb-2 mx-3">
                 <div class="schedule-header-red">WEDNESDAYS</div>
-                <div class="row row-cols-1 row-cols-md-3 g-0 bg-white border rounded-bottom shadow-sm">
+                <div class="row row-cols-1 row-cols-md-3 g-0 bg-white border border-top-0 rounded-bottom shadow-sm">
                     <div class="col p-4 p-md-5 border-end">
                         <h4 class="h5 mb-2 text-dark d-flex align-items-center">
                             <Icon name="fa-solid:info-circle" class="text-danger me-2" /> 5:30 PM
                         </h4>
                         <p class="small text-muted mb-0">Afternoon Prayer Meeting.</p>
                     </div>
-                    <!-- <div class="col p-4 p-md-5 border-end">
-                        <h4 class="h5 mb-2 text-dark d-flex align-items-center">
-                            <Icon name="fa-solid:info-circle" class="text-danger me-2" /> 8:00 AM
-                        </h4>
-                        <p class="small text-muted mb-0">Mid-week Bible study.</p>
+                    <div class="col p-4 p-md-5 bg-light d-none d-md-block border-end"></div>
+                    <div class="col p-4 p-md-5 bg-light d-none d-md-block"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-card mb-5">
+            <div class="row g-0">
+                <div class="col-lg-4 p-4 p-md-5 d-flex flex-column justify-content-center bg-white border-end">
+                    <h3 class="fw-bold text-dark mb-4">Visit Us</h3>
+                    
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-danger mb-1">Address</h5>
+                        <p class="text-secondary mb-0">
+                            Lot 1, Block 41 Citta Grande 3, Lucena City, 4301 Quezon
+                        </p>
                     </div>
-                    <div class="col p-4 p-md-5">
-                        <h4 class="h5 mb-2 text-dark d-flex align-items-center">
-                            <Icon name="fa-solid:info-circle" class="text-danger me-2" /> 5:00 PM
-                        </h4>
-                        <p class="small text-muted mb-0">Youth Ministry meeting.</p>
-                    </div> -->
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-danger mb-1">Phone</h5>
+                        <p class="text-secondary mb-0">042-784-4032 </p>
+                    </div>
+
+                    <div>
+                        <h5 class="fw-bold text-danger mb-1">Email</h5>
+                        <p class="text-secondary mb-0">gracebaptistlucenacity@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1782.3883256792399!2d121.5933708!3d13.9380053!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd4b64c52000f7%3A0x1f54ef6ee1fd32e6!2sGrace%20Baptist%20Church%20Lucena%20City!5e1!3m2!1sen!2sph!4v1768305632316!5m2!1sen!2sph" 
+                        width="600" 
+                        height="450" 
+                        style="border:0; border-radius: 10px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
         </section>
