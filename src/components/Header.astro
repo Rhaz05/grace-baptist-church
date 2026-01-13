@@ -46,10 +46,32 @@ const base = import.meta.env.BASE_URL;
                             <Icon name="fa-solid:book-open" class="me-3" size="1.2rem" /> Preaching
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/bible-study"}>
-                            <Icon name="fa-solid:book-reader" class="me-3" size="1.2rem" /> Bible Study
-                        </a>
+                        <button 
+                            id="bibleStudyTrigger"
+                            class="nav-link d-flex align-items-center justify-content-between w-100 border-0 bg-transparent shadow-none ignore-offcanvas-close" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#bibleStudyMenu" 
+                            aria-expanded="false"
+                            type="button"
+                        >
+                            <div class="d-flex align-items-center">
+                                <Icon name="fa-solid:book-reader" class="me-3" size="1.2rem" /> Bible Study
+                            </div>
+                            <Icon name="fa-solid:chevron-down" size="0.8rem" class="chevron-icon" />
+                        </button>
+                        
+                        <div class="collapse" id="bibleStudyMenu">
+                            <ul class="nav flex-column ms-4 ps-2 border-start gap-1 mt-1">
+                                <li><a class="nav-link small" href={base + "/bible-reading"}>Bible Reading Guide</a></li>
+                                <li><a class="nav-link small" href={base + "/discipleship"}>Discipleship Lesson</a></li>
+                                <li><a class="nav-link small" href={base + "/sunday-school"}>Sunday School Lesson</a></li>
+                                <li><a class="nav-link small" href={base + "/dvbs"}>DVBS Lesson</a></li>
+                                <li><a class="nav-link small" href={base + "/sermon-archive"}>Sermon Archive</a></li>
+                                <li><a class="nav-link small" href={base + "/study-guides"}>Study Guides</a></li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link d-flex align-items-center" href={base + "/staff"}>
@@ -81,3 +103,68 @@ const base = import.meta.env.BASE_URL;
         </div>
     </div>
 </header>
+
+<style>
+    .nav-link.small {
+        font-size: 0.85rem;
+        color: #6c757d;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+    
+    .nav-link.small:hover {
+        color: #8B0000;
+    }
+
+    [aria-expanded="true"] .fa-solid\:chevron-down {
+        transform: rotate(180deg);
+        transition: transform 0.3s ease;
+    }
+
+    button.nav-link {
+        text-align: left;
+        color: inherit;
+        padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    }
+
+    .chevron-icon {
+        transition: transform 0.3s ease;
+    }
+
+    [aria-expanded="true"] .chevron-icon {
+        transform: rotate(180deg);
+    }
+
+    .nav-link.small {
+        font-size: 0.85rem;
+        color: #6c757d;
+        padding: 0.3rem 1rem;
+    }
+</style>
+<script>
+    function setupOffcanvas() {
+        const trigger = document.getElementById('bibleStudyTrigger');
+        const offcanvasElement = document.getElementById('offcanvasRight');
+
+        if (trigger && offcanvasElement) {
+            trigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const targetId = this.getAttribute('data-bs-target');
+                const targetEl = document.querySelector(targetId);
+
+                if ((window as any).bootstrap) {
+                    const bootstrap = (window as any).bootstrap;
+                    const bsCollapse = bootstrap.Collapse.getOrCreateInstance(targetEl);
+                    bsCollapse.toggle();
+                    
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', (!isExpanded).toString());
+                }
+            }, true); 
+        }
+    }
+
+    document.addEventListener("astro:page-load", setupOffcanvas);
+</script>
