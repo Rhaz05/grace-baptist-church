@@ -199,7 +199,7 @@ header,
   font-size: clamp(1.8rem, 4vw, 3.5rem);
   font-weight: bold;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Added readability shadow */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Quick Info Section */
@@ -230,14 +230,6 @@ header,
 .sermon-section {
   background-color: #f8f8f8;
   padding: 4rem 0;
-}
-
-.latest-sermon-title,
-.sermon-title {
-  color: #333;
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  font-weight: bold;
-  margin-bottom: 1rem;
 }
 
 .video-placeholder {
@@ -441,14 +433,13 @@ header,
 }
 
 /* =========================================
-   10. MOBILE RESPONSIVE RESET (THE FIX)
+   10. MOBILE RESPONSIVE RESET 
    ========================================= */
 
 @media (max-width: 991px) {
-  /* 1. Force Containers to be Full Width (Overrides the 200px padding) */
   html,
   body {
-    overflow-x: hidden; /* Stop side-scrolling */
+    overflow-x: hidden;
     width: 100%;
   }
 
@@ -470,7 +461,6 @@ header,
     margin-right: 0 !important;
   }
 
-  /* 2. Fix the Header/Title Text size */
   h1,
   .page-title,
   .display-1,
@@ -481,7 +471,6 @@ header,
     line-height: 1.2;
   }
 
-  /* 3. Fix Lead Paragraphs */
   p.lead,
   .content-body p {
     font-size: 1rem !important;
@@ -489,9 +478,49 @@ header,
     width: 100% !important;
   }
 
-  /* 4. Adjust the Top Spacing for Fixed Header */
   .page-content {
     padding-top: 100px !important;
     padding-bottom: 50px !important;
   }
+}
+
+/* =========================================
+   CUSTOM SCROLLBAR STYLES
+   ========================================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8b0000;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #660000;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #8b0000 #f1f1f1;
+}
+
+.offcanvas-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb {
+  background: rgba(139, 0, 0, 0.5);
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb:hover {
+  background: #8b0000;
 }
