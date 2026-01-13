@@ -65,9 +65,9 @@ function getDateParts(dateString: string) {
 
 <MainLayout title="Events Calendar">
     
-    <div class="container page-content">
+    <div class="container page-content" style="padding-top: 70px;">
         
-        <section class="text-center mb-5 fade-in-up">
+        <section class="text-center mb-4 fade-in-up">
             <h1 class="text-uppercase fw-bold page-title">Church Events</h1>
             <p class="lead ">Stay connected with what's happening in our community.</p>
         </section>
@@ -110,9 +110,9 @@ function getDateParts(dateString: string) {
                 {upcomingEvents.map((event) => {
                     const { month, day } = getDateParts(event.date);
                     return (
-                    <div class="event-card bg-white rounded-4 shadow-sm overflow-hidden h-100 d-flex flex-column">
+                    <div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
                         <div class="p-4 d-flex h-100">
-                            <div class="date-badge me-3 flex-shrink-0 text-center rounded-3 overflow-hidden">
+                            <div class="date-badge me-3 flex-shrink-0 text-center rounded-3 overflow-hidden" style="height: fit-content;">
                                 <div class="bg-danger text-white small fw-bold py-1 px-2 text-uppercase">{month}</div>
                                 <div class="bg-light text-dark fs-3 fw-bold py-2">{day}</div>
                             </div>
