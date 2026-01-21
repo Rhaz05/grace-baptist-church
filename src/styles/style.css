@@ -524,3 +524,7 @@ header,
 .offcanvas-body::-webkit-scrollbar-thumb:hover {
   background: #8b0000;
 }
+
+#latest-sermon-banner {
+  border-radius: 10px;
+}
