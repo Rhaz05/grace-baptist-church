@@ -15,37 +15,57 @@ import { Icon } from 'astro-icon/components';
     </div>
 
     <div class="container">
-        <section class="content-card text-center">
+        <section class="content-card dark-card text-center">
             <div class="d-flex justify-content-center align-items-center mb-5">
-                <div class="divider-line"></div>
-                <h2>Quick Info</h2>
-                <div class="divider-line"></div>
+                <div class="divider-line bg-red"></div>
+                <h2 class="mx-4 mb-0 fw-bold text-uppercase text-white letter-spacing-1">Quick Info</h2>
+                <div class="divider-line bg-red"></div>
             </div>
 
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-                    <div class="mb-3 d-flex justify-content-center">
-                        <Icon name="fa-solid:calendar-alt" size="2em" class="text-secondary" />
+                    <div class="info-item">
+                        <div class="mb-3 d-flex justify-content-center">
+                            <div class="icon-circle">
+                                <Icon name="fa-solid:calendar-alt" size="1.5em" />
+                            </div>
+                        </div>
+                        <h5 class="text-white fw-bold mb-2">Service Times</h5>
+                        <p class="text-white-50 small">Sunday Worship: 10:00 AM</p>
                     </div>
-                    <p class="text-muted">Sunday Worship: 10:00 AM</p>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-                    <div class="mb-3 d-flex justify-content-center">
-                        <Icon name="fa-solid:lock" size="2em" class="text-secondary" />
+                    <div class="info-item">
+                        <div class="mb-3 d-flex justify-content-center">
+                            <div class="icon-circle">
+                                <Icon name="fa-solid:lock" size="1.5em" />
+                            </div>
+                        </div>
+                        <h5 class="text-white fw-bold mb-2">Secure</h5>
+                        <p class="text-white-50 small">Safe and Welcoming Environment</p>
                     </div>
-                    <p class="text-muted">Safe and Welcoming Environment</p>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-                    <div class="mb-3 d-flex justify-content-center">
-                        <Icon name="fa-solid:heartbeat" size="2em" class="text-secondary" />
+                    <div class="info-item">
+                        <div class="mb-3 d-flex justify-content-center">
+                            <div class="icon-circle">
+                                <Icon name="fa-solid:heartbeat" size="1.5em" />
+                            </div>
+                        </div>
+                        <h5 class="text-white fw-bold mb-2">Community</h5>
+                        <p class="text-white-50 small">Caring Community Support</p>
                     </div>
-                    <p class="text-muted">Caring Community Support</p>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-                    <div class="mb-3 d-flex justify-content-center">
-                        <Icon name="fa-solid:bus" size="2em" class="text-secondary" />
+                    <div class="info-item">
+                        <div class="mb-3 d-flex justify-content-center">
+                            <div class="icon-circle">
+                                <Icon name="fa-solid:bus" size="1.5em" />
+                            </div>
+                        </div>
+                        <h5 class="text-white fw-bold mb-2">Transport</h5>
+                        <p class="text-white-50 small">Transportation Available</p>
                     </div>
-                    <p class="text-muted">Transportation Available</p>
                 </div>
             </div>
         </section>
@@ -57,10 +77,10 @@ import { Icon } from 'astro-icon/components';
         </section>
     </div>
 
-    <div class="container" style="margin-top: 80px; margin-bottom: 80px;">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold display-6" style="color: #8b0000;">Events</h2>
-            <p class="text-muted">to encourage you and connect with others</p>
+    <div class="container mt-3">
+        <div class="text-center mb-3 p-3" style="background-color: #8b0000; border-radius: 10px; color: white;">
+            <h2 class="fw-bold display-6">Events</h2>
+            <p class="text-white">to encourage you and connect with others</p>
         </div>
 
         <div class="row g-4" id="upcoming-events-container">
@@ -69,8 +89,8 @@ import { Icon } from 'astro-icon/components';
             </div>
         </div>
 
-        <div class="text-center mt-5">
-            <a href="/grace-baptist-church/events" class="btn btn-primary px-4 py-2 fw-bold text-uppercase" style="letter-spacing: 1px;">
+        <div class="text-center mt-3 mb-3">
+            <a href="/grace-baptist-church/events" class="btn btn-red px-4 py-2 fw-bold text-uppercase" style="letter-spacing: 1px;">
                 View Upcoming Events
             </a>
         </div>

@@ -1,118 +1,179 @@
 ---
 import { Icon } from 'astro-icon/components';
 const currentYear = new Date().getFullYear();
-const base = import.meta.env.BASE_URL;
 ---
 
-<footer class="site-footer">
-    <div class="container text-center">
-        
-        <div class="footer-nav mb-4">
-            <a href={base + "about"} class="footer-link">About Us</a>
-            <a href={base + "preaching"} class="footer-link">Preaching</a>
-            <a href={base + "events"} class="footer-link">Events</a>
-            <a href={base + "ministries"} class="footer-link">Ministries</a>
-            <a href={base + "contact"} class="footer-link">Contact</a>
-        </div>
+<footer class="church-footer">
+    <div class="footer-top">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-brand mb-4">
+                        <h4 class="fw-bold text-white text-uppercase">Grace Baptist Church</h4>
+                        <div class="brand-divider"></div>
+                    </div>
+                    <p class="text-white-50 mb-4">
+                        We are a community committed to sharing the love of Jesus Christ. 
+                        Join us as we grow in faith and serve our city together.
+                    </p>
+                    <div class="social-links d-flex gap-2">
+                        <a href="#" class="social-btn"><Icon name="fa-brands:facebook-f" /></a>
+                        <a href="#" class="social-btn"><Icon name="fa-brands:twitter" /></a>
+                        <a href="#" class="social-btn"><Icon name="fa-brands:instagram" /></a>
+                        <a href="#" class="social-btn"><Icon name="fa-brands:youtube" /></a>
+                    </div>
+                </div>
 
-        <div class="footer-social mb-4">
-            <a href="https://www.youtube.com/@GRACEBAPTISTCHURCHLUCENA" aria-label="YouTube" class="social-icon">
-                <Icon name="fa-brands:youtube" size="1.5rem" />
-            </a>
-            <a href="https://www.facebook.com/gracebaptistlucenacity" aria-label="Facebook" class="social-icon">
-                <Icon name="fa-brands:facebook-f" size="1.2rem" />
-            </a>
-            <!-- <a href="#" aria-label="Instagram" class="social-icon">
-                <Icon name="fa-brands:instagram" size="1.5rem" />
-            </a>
-            <a href="#" aria-label="Twitter" class="social-icon">
-                <Icon name="fa-brands:twitter" size="1.3rem" />
-            </a> -->
-        </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-white fw-bold mb-4">Quick Links</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="/grace-baptist-church/"><Icon name="fa-solid:chevron-right" class="me-2 small-icon" />Home</a></li>
+                        <li><a href="/grace-baptist-church/preaching"><Icon name="fa-solid:chevron-right" class="me-2 small-icon" />Preaching</a></li>
+                        <li><a href="/grace-baptist-church/events"><Icon name="fa-solid:chevron-right" class="me-2 small-icon" />Events</a></li>
+                        <li><a href="#"><Icon name="fa-solid:chevron-right" class="me-2 small-icon" />About Us</a></li>
+                        <li><a href="#"><Icon name="fa-solid:chevron-right" class="me-2 small-icon" />Contact</a></li>
+                    </ul>
+                </div>
 
-        <div class="footer-contact mb-4">
-            <p class="mb-1">Lot 1, Block 41 Citta Grande 3, Lucena City, 4301 Quezon</p>
-            <p class="mb-1">
-                Phone: <a href="tel:5551234567">(042) 784-4032</a> 
-                <span class="mx-2">•</span> 
-                Email: <a href="mailto:gracebaptistlucenacity@gmail.com">gracebaptistlucenacity@gmail.com</a>
-            </p>
-        </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white fw-bold mb-4">Service Times</h5>
+                    <ul class="list-unstyled text-white-50 service-times">
+                        <li class="d-flex justify-content-between mb-2">
+                            <span>Sunday School</span>
+                            <span class="text-white">9:00 AM</span>
+                        </li>
+                        <li class="d-flex justify-content-between mb-2">
+                            <span>Sunday Worship</span>
+                            <span class="text-white">10:00 AM</span>
+                        </li>
+                        <li class="d-flex justify-content-between mb-2">
+                            <span>Sunday Evening</span>
+                            <span class="text-white">6:00 PM</span>
+                        </li>
+                        <li class="d-flex justify-content-between">
+                            <span>Wed Prayer</span>
+                            <span class="text-white">7:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
 
-        <div class="footer-copyright">
-            <p class="mb-0">&copy; {currentYear} Grace Baptist Church. All rights reserved.</p>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white fw-bold mb-4">Contact Us</h5>
+                    <ul class="list-unstyled text-white-50 contact-info">
+                        <li class="mb-3 d-flex">
+                            <Icon name="fa-solid:map-marker-alt" class="me-3 mt-1 text-red" />
+                            <span>123 Grace Avenue,<br>Faith City, FC 12345</span>
+                        </li>
+                        <li class="mb-3 d-flex">
+                            <Icon name="fa-solid:phone" class="me-3 mt-1 text-red" />
+                            <span>(555) 123-4567</span>
+                        </li>
+                        <li class="mb-3 d-flex">
+                            <Icon name="fa-solid:envelope" class="me-3 mt-1 text-red" />
+                            <span>info@gracebaptist.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+    </div>
 
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-white-50 small">&copy; {currentYear} Grace Baptist Church. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+                    <a href="/grace-baptist-church/admin" class="text-white-50 small text-decoration-none hover-white">Admin Login</a>
+                </div>
+            </div>
+        </div>
     </div>
 </footer>
 
 <style>
-
-    .site-footer {
-        background-color: #555e66;
-        color: rgba(255, 255, 255, 0.8); 
-        padding: 4rem 0 2rem;
-        font-size: 0.9rem;
+    .church-footer {
+        background-color: #1a1a1a;
+        font-size: 0.95rem;
+        position: relative;
+        overflow: hidden;
+        border-top: 4px solid #8b0000;
     }
 
-    .footer-link {
-        color: white;
-        text-decoration: none;
-        margin: 0 15px;
-        font-weight: 500;
-        transition: color 0.2s ease;
-        display: inline-block;
+    .footer-top {
+        padding: 80px 0 60px;
     }
 
-    .footer-link:hover {
-        color: #ffec3e; 
-        text-decoration: underline;
-        text-underline-offset: 4px;
+    .brand-divider {
+        width: 60px;
+        height: 3px;
+        background-color: #8b0000;
+        margin-top: 10px;
     }
 
-    .social-icon {
-        color: white;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+    .social-btn {
         width: 40px;
         height: 40px;
+        background-color: rgba(255,255,255,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.1); 
-        margin: 0 8px;
+        color: #fff;
         transition: all 0.3s ease;
-        text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .social-icon:hover {
-        background-color: #8B0000; 
+    .social-btn:hover {
+        background-color: #8b0000;
+        border-color: #8b0000;
         transform: translateY(-3px);
-        color: white;
     }
 
-    .footer-contact a {
-        color: rgba(255, 255, 255, 0.9);
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+
+    .footer-links a {
+        color: rgba(255,255,255,0.6);
         text-decoration: none;
-        border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .footer-links a:hover {
+        color: #8b0000;
+        padding-left: 5px;
+    }
+
+    .small-icon {
+        font-size: 0.7em;
+        opacity: 0.5;
+    }
+
+    .service-times li {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 8px;
+        margin-bottom: 8px;
     }
     
-    .footer-contact a:hover {
-        color: white;
-        border-bottom-style: solid;
+    .service-times li:last-child {
+        border-bottom: none;
     }
 
-    .footer-copyright {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.5);
-        margin-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding-top: 1.5rem;
+    .text-red {
+        color: #8b0000;
     }
 
-    @media (max-width: 768px) {
-        .footer-link {
-            display: block;
-            margin: 10px 0;
-        }
+    .footer-bottom {
+        background-color: #111;
+        padding: 25px 0;
+        border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .hover-white:hover {
+        color: #fff !important;
     }
 </style>

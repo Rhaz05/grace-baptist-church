@@ -3,8 +3,8 @@ import { Icon } from 'astro-icon/components';
 const base = import.meta.env.BASE_URL;
 ---
 
-<header>
-    <nav class="navbar navbar-light navbar-custom p-0">
+<header class="site-header">
+    <nav class="navbar navbar-dark p-0">
         <div class="container-fluid px-3 px-lg-5 py-2 d-flex justify-content-between align-items-center">
             
             <a class="navbar-brand d-flex align-items-center m-0" href={base}>
@@ -12,119 +12,194 @@ const base = import.meta.env.BASE_URL;
                     <img src={base + "img/church_logo.png"} alt="Grace Baptist Church Logo" style="max-height: 50px; width: auto;" />
                 </div>
                 <div class="d-flex flex-column justify-content-center lh-1">
-                    <span class="fw-bold brand-text text-wrap">Grace Baptist Church</span>
-                    <span class="brand-tagline text-secondary mt-1 d-none d-sm-block">Worship • Community • Service</span>
+                    <span class="fw-bold brand-text text-white text-wrap">Grace Baptist Church</span>
+                    <span class="brand-tagline text-white-50 mt-1 d-none d-sm-block">Worship • Community • Service</span>
                 </div>
             </a>
 
             <button class="navbar-toggler border-0 ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
-                <Icon name="fa-solid:bars" size="1.5rem" style="color: #8B0000;" />
+                <Icon name="fa-solid:bars" size="1.5rem" class="text-red" />
             </button>
         </div>
     </nav>
-
-    <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="offcanvasRight">
-        <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title">Menu</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body">
-            <nav>
-                <ul class="nav flex-column gap-2 p-2">
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base}>
-                            <Icon name="fa-solid:home" class="me-3" size="1.2rem" /> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/about"}>
-                            <Icon name="fa-solid:church" class="me-3" size="1.2rem" /> About Us
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/preaching"}>
-                            <Icon name="fa-solid:book-open" class="me-3" size="1.2rem" /> Preaching
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <button 
-                            id="bibleStudyTrigger"
-                            class="nav-link d-flex align-items-center justify-content-between w-100 border-0 bg-transparent shadow-none ignore-offcanvas-close" 
-                            data-bs-toggle="collapse" 
-                            data-bs-target="#bibleStudyMenu" 
-                            aria-expanded="false"
-                            type="button"
-                        >
-                            <div class="d-flex align-items-center">
-                                <Icon name="fa-solid:book-reader" class="me-3" size="1.2rem" /> Resources
-                            </div>
-                            <Icon name="fa-solid:chevron-down" size="0.8rem" class="chevron-icon" />
-                        </button>
-                        
-                        <div class="collapse" id="bibleStudyMenu">
-                            <ul class="nav flex-column ms-4 ps-2 border-start gap-1 mt-1">
-                                <li><a class="nav-link small" href={base + "/bible-reading"}>Bible Reading Guide</a></li>
-                                <li><a class="nav-link small" href={base + "/discipleship"}>Discipleship Lesson</a></li>
-                                <li><a class="nav-link small" href={base + "/sunday-school"}>Sunday School Lesson</a></li>
-                                <li><a class="nav-link small" href={base + "/dvbs"}>DVBS Lesson</a></li>
-                                <li><a class="nav-link small" href={base + "/sermon-archive"}>Sermon Archive</a></li>
-                                <li><a class="nav-link small" href={base + "/study-guides"}>Study Guides</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/staff"}>
-                            <Icon name="fa-solid:users" class="me-3" size="1.2rem" /> Staff
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/photos"}>
-                            <Icon name="fa-solid:images" class="me-3" size="1.2rem" /> Photos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/music"}>
-                            <Icon name="fa-solid:music" class="me-3" size="1.2rem" /> Music
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/events"}>
-                            <Icon name="fa-solid:calendar-alt" class="me-3" size="1.2rem" /> Events
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href={base + "/missions"}>
-                            <Icon name="fa-solid:church" class="me-3" size="1.2rem" /> Missions
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
 </header>
 
+<div class="offcanvas offcanvas-end offcanvas-dark" tabindex="-1" id="offcanvasRight">
+    <div class="offcanvas-header border-bottom border-secondary">
+        <h5 class="offcanvas-title text-white">Menu</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <nav>
+            <ul class="nav flex-column gap-2 p-2">
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base}>
+                        <Icon name="fa-solid:home" class="me-3 nav-icon" size="1.2rem" /> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base + "/about"}>
+                        <Icon name="fa-solid:church" class="me-3 nav-icon" size="1.2rem" /> About Us
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base + "/preaching"}>
+                        <Icon name="fa-solid:book-open" class="me-3 nav-icon" size="1.2rem" /> Preaching
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <button 
+                        id="bibleStudyTrigger"
+                        class="nav-link d-flex align-items-center justify-content-between w-100 border-0 bg-transparent shadow-none ignore-offcanvas-close" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#bibleStudyMenu" 
+                        aria-expanded="false"
+                        type="button"
+                    >
+                        <div class="d-flex align-items-center">
+                            <Icon name="fa-solid:book-reader" class="me-3 nav-icon" size="1.2rem" /> Resources
+                        </div>
+                        <Icon name="fa-solid:chevron-down" size="0.8rem" class="chevron-icon" />
+                    </button>
+                    
+                    <div class="collapse" id="bibleStudyMenu">
+                        <ul class="nav flex-column ms-4 ps-2 border-start border-secondary gap-1 mt-1">
+                            <li><a class="nav-link small" href={base + "/bible-reading"}>Bible Reading Guide</a></li>
+                            <li><a class="nav-link small" href={base + "/discipleship"}>Discipleship Lesson</a></li>
+                            <li><a class="nav-link small" href={base + "/sunday-school"}>Sunday School Lesson</a></li>
+                            <li><a class="nav-link small" href={base + "/dvbs"}>DVBS Lesson</a></li>
+                            <li><a class="nav-link small" href={base + "/sermon-archive"}>Sermon Archive</a></li>
+                            <li><a class="nav-link small" href={base + "/study-guides"}>Study Guides</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base + "/staff"}>
+                        <Icon name="fa-solid:users" class="me-3 nav-icon" size="1.2rem" /> Staff
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base + "/photos"}>
+                        <Icon name="fa-solid:images" class="me-3 nav-icon" size="1.2rem" /> Photos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base + "/music"}>
+                        <Icon name="fa-solid:music" class="me-3 nav-icon" size="1.2rem" /> Music
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base + "/events"}>
+                        <Icon name="fa-solid:calendar-alt" class="me-3 nav-icon" size="1.2rem" /> Events
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center" href={base + "/missions"}>
+                        <Icon name="fa-solid:globe" class="me-3 nav-icon" size="1.2rem" /> Missions
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<style is:global>
+    .offcanvas-backdrop {
+        z-index: 1040 !important;
+    }
+</style>
+
 <style>
-    .nav-link.small {
+    :root {
+        --header-bg: #1a1a1a;
+        --accent-red: #8B0000;
+        --text-white: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.6);
+    }
+
+    /* HEADER: Z-Index 1020 (Standard Sticky) */
+    .site-header {
+        background-color: var(--header-bg);
+        border-bottom: 4px solid var(--accent-red);
+        position: sticky;
+        top: 0;
+        z-index: 1020; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    /* OFFCANVAS: Z-Index 1050 (Higher than Header) */
+    .offcanvas-dark {
+        background-color: var(--header-bg);
+        color: var(--text-white);
+        z-index: 99999 !important; /* Force to top */
+    }
+
+    .logo-container img {
+        max-height: 50px;
+        width: auto;
+    }
+
+    .brand-text {
+        font-size: 1.25rem;
+        line-height: 1.2;
+    }
+
+    .brand-tagline {
         font-size: 0.85rem;
-        color: #6c757d;
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
+        letter-spacing: 0.5px;
+    }
+
+    .text-red {
+        color: var(--accent-red);
+        transition: transform 0.2s ease;
+    }
+    
+    .navbar-toggler:hover .text-red {
+        color: #ff4d4d;
+        transform: scale(1.1);
+    }
+
+    .offcanvas-header {
+        border-color: rgba(255,255,255,0.1) !important;
+    }
+
+    /* Links */
+    .nav-link {
+        color: var(--text-white);
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .nav-link:hover, .nav-link[aria-expanded="true"] {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--accent-red);
+        padding-left: 1.5rem;
+    }
+
+    .nav-icon {
+        color: var(--accent-red);
+        opacity: 0.8;
+    }
+
+    .nav-link:hover .nav-icon {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .nav-link.small {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        padding: 0.5rem 1rem;
     }
     
     .nav-link.small:hover {
-        color: #8B0000;
-    }
-
-    [aria-expanded="true"] .fa-solid\:chevron-down {
-        transform: rotate(180deg);
-        transition: transform 0.3s ease;
-    }
-
-    button.nav-link {
-        text-align: left;
-        color: inherit;
-        padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+        color: var(--text-white);
+        background: transparent;
+        padding-left: 1.25rem;
     }
 
     .chevron-icon {
@@ -133,14 +208,10 @@ const base = import.meta.env.BASE_URL;
 
     [aria-expanded="true"] .chevron-icon {
         transform: rotate(180deg);
-    }
-
-    .nav-link.small {
-        font-size: 0.85rem;
-        color: #6c757d;
-        padding: 0.3rem 1rem;
+        color: var(--accent-red);
     }
 </style>
+
 <script>
 function setupOffcanvas() {
     const trigger = document.getElementById('bibleStudyTrigger');
@@ -152,7 +223,6 @@ function setupOffcanvas() {
             e.stopPropagation();
             
             const targetId = this.getAttribute('data-bs-target');
-
             if (!targetId) return; 
 
             const targetEl = document.querySelector(targetId);

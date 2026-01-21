@@ -528,3 +528,99 @@ header,
 #latest-sermon-banner {
   border-radius: 10px;
 }
+
+/* =========================================
+   CUSTOM BRAND BUTTONS (#8b0000)
+   ========================================= */
+
+.btn-red {
+  background-color: #8b0000;
+  border: 2px solid #8b0000;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 6px rgba(139, 0, 0, 0.1);
+}
+
+.btn-red:hover {
+  background-color: #660000;
+  border-color: #660000;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(139, 0, 0, 0.3);
+}
+
+.btn-red:active,
+.btn-red:focus {
+  background-color: #4d0000 !important;
+  border-color: #4d0000 !important;
+  box-shadow: none !important;
+  transform: translateY(0);
+}
+
+.btn-outline-red {
+  background-color: transparent;
+  border: 2px solid #8b0000;
+  color: #8b0000;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-red:hover {
+  background-color: #8b0000;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(139, 0, 0, 0.2);
+}
+
+.btn-outline-red:active,
+.btn-outline-red:focus {
+  background-color: #660000 !important;
+  border-color: #660000 !important;
+  color: white !important;
+  transform: translateY(0);
+}
+
+/* Dark Card Styling */
+.dark-card {
+  background-color: #1a1a1a !important; /* Matches Footer */
+  border-top: 4px solid #8b0000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 3rem 1.5rem;
+}
+
+/* Red Divider Lines */
+.divider-line.bg-red {
+  width: 60px;
+  height: 3px;
+  background-color: #8b0000;
+  opacity: 1;
+}
+
+.letter-spacing-1 {
+  letter-spacing: 1px;
+}
+
+/* Circular Icon Containers */
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b0000; /* Red Icon */
+  transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.info-item:hover .icon-circle {
+  background-color: #8b0000;
+  border-color: #8b0000;
+  color: white; /* White Icon on Hover */
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+}
