@@ -1,23 +1,6 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import { Icon } from 'astro-icon/components';
-import { supabase } from "../lib/supabase";
-
-const { data: eventsData, error } = await supabase
-  .from('events')
-  .select('*')
-  .order('event_date', { ascending: true });
-
-const upcomingEvents = eventsData || [];
-
-function formatEventData(dateString: string) {
-    const date = new Date(dateString);
-    return {
-        month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
-        day: date.getDate().toString(),
-        time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-}
 ---
 
 <MainLayout title="Events Calendar">
@@ -46,8 +29,7 @@ function formatEventData(dateString: string) {
                         <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
                     </div>
 
-                    <div id="calendar-grid" class="calendar-grid">
-                        </div>
+                    <div id="calendar-grid" class="calendar-grid"></div>
                 </div>
             </div>
         </section>
@@ -58,43 +40,11 @@ function formatEventData(dateString: string) {
                 <h2 class="fw-bold text-white mb-0">Upcoming Events</h2>
             </div>
             
-            <div class="event-grid">
-                {upcomingEvents.length === 0 ? (
-                    <div class="text-white text-opacity-75 p-3">No upcoming events scheduled at this time.</div>
-                ) : (
-                    upcomingEvents.map((event) => {
-                        const { month, day, time } = formatEventData(event.event_date);
-                        return (
-                        <div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
-                            
-                            {/* NEW: Display Image if URL exists */}
-                            {event.image_url && (
-                                <div style={`height: 200px; background-image: url('${event.image_url}'); background-size: cover; background-position: center;`}></div>
-                            )}
-
-                            <div class="p-4 d-flex">
-                                <div class="date-badge me-3 flex-shrink-0 text-center rounded-3 overflow-hidden" style="height: fit-content;">
-                                    <div class="bg-danger text-white small fw-bold py-1 px-2 text-uppercase">{month}</div>
-                                    <div class="bg-light text-dark fs-3 fw-bold py-2">{day}</div>
-                                </div>
-                                
-                                <div class="flex-grow-1">
-                                    <h5 class="fw-bold text-dark mb-2">{event.title}</h5>
-                                    <div class="text-muted small mb-3">
-                                        <div class="d-flex align-items-center mb-1">
-                                            <Icon name="fa-solid:clock" class="me-2 opacity-50" /> {time}
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <Icon name="fa-solid:map-marker-alt" class="me-2 opacity-50" /> {event.location}
-                                        </div>
-                                    </div>
-                                    <p class="text-secondary mb-0 small clamp-2">{event.description}</p>
-                                </div>
-                            </div>
-                        </div>
-                        )
-                    })
-                )}
+            <div id="event-grid" class="event-grid">
+                <div class="col-12 text-center py-5 w-100">
+                     <div class="spinner-border text-danger" role="status"></div>
+                     <p class="mt-2 text-muted">Loading latest events...</p>
+                 </div>
             </div>
         </section>
 
@@ -181,23 +131,23 @@ function formatEventData(dateString: string) {
         .event-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
-    .event-card {
+    :global(.event-card) {
         border: 1px solid rgba(0,0,0,0.05);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         background: white;
     }
 
-    .event-card:hover {
+    :global(.event-card:hover) {
         transform: translateY(-5px);
         box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
     }
 
-    .date-badge {
+    :global(.date-badge) {
         border: 1px solid #e0e0e0;
         width: 70px;
     }
 
-    .clamp-2 {
+    :global(.clamp-2) {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -211,6 +161,8 @@ function formatEventData(dateString: string) {
 </style>
 
 <script>
+    import { supabase } from "../lib/supabase";
+
     document.addEventListener("astro:page-load", () => {
         const grid = document.getElementById("calendar-grid");
         const monthYearLabel = document.getElementById("currentMonthYear");
@@ -224,13 +176,10 @@ function formatEventData(dateString: string) {
         function renderCalendar(month: number, year: number) {
             if (!grid || !monthYearLabel) return;
             grid.innerHTML = ""; 
-
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             monthYearLabel.innerText = `${monthNames[month]} ${year}`;
-
             const firstDayOfMonth = new Date(year, month, 1).getDay(); 
             const daysInMonth = new Date(year, month + 1, 0).getDate(); 
-
             const today = new Date();
             const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
 
@@ -239,16 +188,11 @@ function formatEventData(dateString: string) {
                 emptyCell.className = "calendar-day empty";
                 grid.appendChild(emptyCell);
             }
-
             for (let i = 1; i <= daysInMonth; i++) {
                 const dayCell = document.createElement("div");
                 dayCell.className = "calendar-day";
                 dayCell.innerText = i.toString();
-
-                if (isCurrentMonth && i === today.getDate()) {
-                    dayCell.classList.add("today");
-                }
-
+                if (isCurrentMonth && i === today.getDate()) dayCell.classList.add("today");
                 grid.appendChild(dayCell);
             }
         }
@@ -258,13 +202,79 @@ function formatEventData(dateString: string) {
             if (currentMonth < 0) { currentMonth = 11; currentYear--; }
             renderCalendar(currentMonth, currentYear);
         });
-
         nextBtn?.addEventListener("click", () => {
             currentMonth++;
             if (currentMonth > 11) { currentMonth = 0; currentYear++; }
             renderCalendar(currentMonth, currentYear);
         });
-
         renderCalendar(currentMonth, currentYear);
+
+        const eventGrid = document.getElementById("event-grid");
+
+        function formatEventData(dateString: string) {
+            const date = new Date(dateString);
+            return {
+                month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
+                day: date.getDate().toString(),
+                time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+        }
+
+        async function fetchEvents() {
+            if(!eventGrid) return;
+            
+            const { data, error } = await supabase
+                .from('events')
+                .select('*')
+                .order('event_date', { ascending: true });
+
+            if (error || !data) {
+                eventGrid.innerHTML = `<div class="text-danger text-center w-100 p-5">Unable to load events at this time.</div>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                eventGrid.innerHTML = `<div class="text-muted text-center w-100 p-5">No upcoming events scheduled.</div>`;
+                return;
+            }
+
+            const clockIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" class="me-2 opacity-50"><path d="M464 256A208 208 0 1 1 48 256a208 208 0 0 1 416 0zM0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.3 25.8 4.2 33.1-6.8s4.2-25.8-6.8-33.1l-83-55.3V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>`;
+            const mapIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512" fill="currentColor" class="me-2 opacity-50"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>`;
+
+            eventGrid.innerHTML = data.map((event) => {
+                const { month, day, time } = formatEventData(event.event_date);
+                
+                const imageHtml = event.image_url 
+                    ? `<div style="height: 200px; background-image: url('${event.image_url}'); background-size: cover; background-position: center;"></div>` 
+                    : '';
+
+                return `
+                <div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
+                    ${imageHtml}
+                    <div class="p-4 d-flex">
+                        <div class="date-badge me-3 flex-shrink-0 text-center rounded-3 overflow-hidden" style="height: fit-content;">
+                            <div class="bg-danger text-white small fw-bold py-1 px-2 text-uppercase">${month}</div>
+                            <div class="bg-light text-dark fs-3 fw-bold py-2">${day}</div>
+                        </div>
+                        
+                        <div class="flex-grow-1">
+                            <h5 class="fw-bold text-dark mb-2">${event.title}</h5>
+                            <div class="text-muted small mb-3">
+                                <div class="d-flex align-items-center mb-1">
+                                    ${clockIcon} ${time}
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    ${mapIcon} ${event.location}
+                                </div>
+                            </div>
+                            <p class="text-secondary mb-0 small clamp-2">${event.description || ''}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        fetchEvents();
     });
 </script>

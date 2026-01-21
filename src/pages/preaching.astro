@@ -1,19 +1,6 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import { Icon } from 'astro-icon/components';
-import { supabase } from "../lib/supabase";
-
-const { data: sermons } = await supabase
-  .from('sermons')
-  .select('*')
-  .order('date_preached', { ascending: false });
-
-function getThumbnail(url: string) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    const id = (match && match[2].length === 11) ? match[2] : null;
-    return id ? `https://i.ytimg.com/vi/${id}/mqdefault.jpg` : '/img/default-sermon.jpg';
-}
 ---
 
 <MainLayout title="Preaching">
@@ -41,37 +28,14 @@ function getThumbnail(url: string) {
                     <label for="dateSelect" class="form-label text-muted">Date</label>
                     <input type="date" class="form-control" id="dateSelect">
                 </div>
-                <div class="col-12 text-end mt-4">
-                    <button id="searchBtn" class="btn btn-outline-red text-uppercase px-5">Search</button>
-                </div>
             </div>
         </section>
 
-        <div id="sermon-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" data-sermons={JSON.stringify(sermons)}>
-            {/* Initial Server Render (SEO Friendly) */}
-            {sermons?.map((s) => (
-                <div class="col sermon-item" data-title={s.title.toLowerCase()} data-date={s.date_preached}>
-                    <div class="sermon-card">
-                        <div class="sermon-card-image">
-                            <img src={getThumbnail(s.video_url)} alt={s.title} style="width:100%; height:100%; object-fit:cover;">
-                        </div>
-                        <div class="sermon-card-body">
-                            <div class="meta-tag">Sermon</div>
-                            <div class="sermon-title">{s.title}</div>
-                            <div class="small text-muted mb-3 d-flex align-items-center">
-                                <Icon name="fa-solid:calendar-alt" class="me-2" />
-                                {new Date(s.date_preached).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-                            </div>
-                            <p class="text-muted small mb-4 flex-grow-1">{s.description || 'No description available.'}</p>
-                            <div class="d-flex gap-2 mt-auto">
-                                <a href={s.video_url} target="_blank" class="btn btn-sm btn-outline-red flex-fill py-2">
-                                    <Icon name="fa-solid:video" class="me-2" /> Watch
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ))}
+        <div id="sermon-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+             <div class="col-12 text-center py-5">
+                 <div class="spinner-border text-danger" role="status"></div>
+                 <p class="mt-2 text-muted">Loading sermons...</p>
+             </div>
         </div>
 
         <nav aria-label="Sermon page navigation" class="mt-5">
@@ -113,33 +77,89 @@ function getThumbnail(url: string) {
 </style>
 
 <script>
-    // Client-side filtering logic
-    document.addEventListener("astro:page-load", () => {
+    import { supabase } from "../lib/supabase";
+
+    document.addEventListener("astro:page-load", async () => {
         const grid = document.getElementById("sermon-grid");
         const paginationContainer = document.getElementById("pagination");
         const searchInput = document.getElementById("searchSermon") as HTMLInputElement;
         const dateInput = document.getElementById("dateSelect") as HTMLInputElement;
-        const searchBtn = document.getElementById("searchBtn");
 
         if (!grid) return;
 
-        const allItems = Array.from(grid.getElementsByClassName("sermon-item")) as HTMLElement[];
+        let allSermons: any[] = [];
+        let filteredSermons: any[] = [];
         const itemsPerPage = 6;
         let currentPage = 1;
-        let filteredItems = [...allItems]; 
+
+        function getThumbnail(url: string) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            const id = (match && match[2].length === 11) ? match[2] : null;
+            return id ? `https://i.ytimg.com/vi/${id}/mqdefault.jpg` : null;
+        }
+
+        async function fetchSermons() {
+            const { data, error } = await supabase
+                .from('sermons')
+                .select('*')
+                .order('date_preached', { ascending: false });
+
+            if (error || !data) {
+                grid!.innerHTML = `<div class="col-12 text-center py-5 text-danger">Error loading sermons. Please refresh.</div>`;
+                return;
+            }
+
+            allSermons = data;
+            applyFilter(); 
+        }
 
         function render() {
-            allItems.forEach(el => el.style.display = 'none');
-            
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
-            const toShow = filteredItems.slice(start, end);
+            const toShow = filteredSermons.slice(start, end);
 
-            if(toShow.length === 0) {
+            if (toShow.length === 0) {
+                grid!.innerHTML = `<div class="col-12 text-center py-5 text-muted">No sermons found matching your search.</div>`;
+                paginationContainer!.innerHTML = '';
+                return;
             }
-            toShow.forEach(el => el.style.display = 'block');
 
-            renderPagination(Math.ceil(filteredItems.length / itemsPerPage));
+            grid!.innerHTML = toShow.map(s => {
+                const thumb = getThumbnail(s.video_url);
+                const thumbStyle = thumb 
+                    ? `background-image: url('${thumb}'); background-size: cover; background-position: center;`
+                    : `background-color: #eee;`; 
+                
+                const calendarIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="currentColor" class="me-2"><path d="M96 32V64H48C21.5 64 0 85.5 0 112v48H448V112c0-26.5-21.5-48-48-48H352V32c0-17.7-14.3-32-32-32s-32 14.3-32 32V64H160V32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192H0V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V192z"/></svg>`;
+                const videoIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512" fill="currentColor" class="me-2"><path d="M0 128C0 92.7 28.7 64 64 64H320c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zM559.1 99.8c10.4 5.6 16.9 16.4 16.9 28.2V384c0 11.9-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64L416 337.1V320 192 174.9l14.2-9.5 96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/></svg>`;
+
+                const dateStr = new Date(s.date_preached).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
+                return `
+                <div class="col sermon-item">
+                    <div class="sermon-card">
+                        <div class="sermon-card-image" style="${thumbStyle}"></div>
+                        <div class="sermon-card-body">
+                            <div class="meta-tag">Sermon</div>
+                            <div class="sermon-title">${s.title}</div>
+                            <div class="small text-muted mb-3 d-flex align-items-center">
+                                ${calendarIcon}
+                                ${dateStr}
+                            </div>
+                            <p class="text-muted small mb-4 flex-grow-1 clamp-3">${s.description || 'No description available.'}</p>
+                            <div class="d-flex gap-2 mt-auto">
+                                <a href="${s.video_url}" target="_blank" class="btn btn-sm btn-outline-red flex-fill py-2 d-flex align-items-center justify-content-center">
+                                    ${videoIcon} Watch
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+
+            renderPagination(Math.ceil(filteredSermons.length / itemsPerPage));
         }
 
         function renderPagination(totalPages: number) {
@@ -163,15 +183,11 @@ function getThumbnail(url: string) {
 
         function applyFilter() {
             const term = searchInput.value.toLowerCase();
-            const date = dateInput.value; // YYYY-MM-DD
+            const date = dateInput.value;
 
-            filteredItems = allItems.filter(el => {
-                const title = el.dataset.title || '';
-                const itemDate = el.dataset.date || ''; 
-                
-                const matchesSearch = title.includes(term);
-                const matchesDate = date === "" || itemDate === date;
-
+            filteredSermons = allSermons.filter(s => {
+                const matchesSearch = s.title.toLowerCase().includes(term) || (s.description && s.description.toLowerCase().includes(term));
+                const matchesDate = date === "" || s.date_preached === date;
                 return matchesSearch && matchesDate;
             });
 
@@ -179,9 +195,9 @@ function getThumbnail(url: string) {
             render();
         }
 
-        searchBtn?.addEventListener("click", applyFilter);
+        searchInput?.addEventListener("input", applyFilter);
         dateInput?.addEventListener("change", applyFilter);
 
-        render();
+        fetchSermons();
     });
 </script>
