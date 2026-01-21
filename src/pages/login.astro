@@ -1,0 +1,153 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
+---
+
+<MainLayout title="Admin Login">
+  <div class="login-wrapper d-flex justify-content-center align-items-center">
+    
+    <div class="modern-card p-5 fade-in-up">
+      <div class="text-center mb-4">
+        <div class="icon-header mb-3 mx-auto text-primary">
+          <Icon name="fa-solid:church" size="1.5rem" />
+        </div>
+        <h2 class="fw-bold text-dark mb-1">Welcome Back</h2>
+        <p class="text-muted small">Please sign in to manage church content.</p>
+      </div>
+      
+      <form id="login-form">
+        <div class="form-floating mb-3">
+          <input type="email" class="form-control clean-input" id="email" name="email" required placeholder="name@example.com">
+          <label for="email" class="text-muted">Email Address</label>
+        </div>
+        
+        <div class="form-floating mb-4">
+          <input type="password" class="form-control clean-input" id="password" name="password" required placeholder="Password">
+          <label for="password" class="text-muted">Password</label>
+        </div>
+        
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary btn-lg btn-elegant">
+            Sign In
+          </button>
+        </div>
+        
+        <div id="error-message" class="text-danger mt-3 text-center small fw-bold"></div>
+      </form>
+    </div>
+
+  </div>
+</MainLayout>
+
+<script>
+  import { supabase } from "../lib/supabase";
+
+  document.addEventListener('astro:page-load', () => {
+    const form = document.getElementById("login-form");
+    const errorMessage = document.getElementById("error-message");
+
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        if (errorMessage) errorMessage.textContent = "";
+        
+        const btn = form.querySelector('button');
+        if(btn) {
+            const originalText = btn.innerText;
+            btn.innerText = 'Signing in...';
+            btn.disabled = true;
+        }
+
+        const formData = new FormData(form as HTMLFormElement);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          if (errorMessage) errorMessage.textContent = "Invalid login credentials.";
+          if(btn) {
+              btn.innerText = 'Sign In';
+              btn.disabled = false;
+          }
+        } else {
+          window.location.href = "/grace-baptist-church/admin"; 
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .login-wrapper {
+    min-height: 85vh;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .modern-card {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff; 
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2), 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  .icon-header {
+    width: 60px;
+    height: 60px;
+    background: #f8f9fa; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clean-input {
+    border: 2px solid #eee; 
+    border-radius: 10px;
+    padding-top: 1.625rem; 
+    padding-bottom: 0.625rem;
+  }
+
+  .clean-input:focus {
+    border-color: #0d6efd;
+    box-shadow: none; 
+  }
+
+  .btn-elegant {
+    background-color: #0d6efd; 
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-elegant:hover {
+    background-color: #0b5ed7; 
+    transform: translateY(-1px); 
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

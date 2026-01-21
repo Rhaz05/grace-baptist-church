@@ -1,0 +1,352 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { Icon } from 'astro-icon/components';
+
+function getDateParts(dateString: string) {
+    if(!dateString) return { month: '', day: '' };
+    const date = new Date(dateString);
+    return {
+        month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
+        day: date.getDate().toString()
+    };
+}
+---
+
+<MainLayout title="Admin Dashboard">
+  <div id="admin-content" class="container page-content d-none fade-in">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+      <div>
+        <h1 class="fw-bold mb-0 text-uppercase">Admin Dashboard</h1>
+        <p class="text-white-50">Manage church content</p>
+      </div>
+      <button id="logout-btn" class="btn btn-danger px-4 rounded-pill fw-bold shadow-sm">
+        <Icon name="fa-solid:sign-out-alt" class="me-2" /> Log Out
+      </button>
+    </div>
+
+    <ul class="nav nav-pills mb-4 justify-content-center" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active rounded-pill px-4 fw-bold" id="pills-events-tab" data-bs-toggle="pill" data-bs-target="#pills-events" type="button" role="tab">
+                <Icon name="fa-solid:calendar-alt" class="me-2" /> Events
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill px-4 fw-bold" id="pills-sermons-tab" data-bs-toggle="pill" data-bs-target="#pills-sermons" type="button" role="tab">
+                <Icon name="fa-solid:bible" class="me-2" /> Sermons
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="pills-tabContent">
+        
+        <div class="tab-pane fade show active" id="pills-events" role="tabpanel">
+            <div class="bg-white rounded-4 shadow-lg p-4 mb-5 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold text-dark">Events List</h4>
+                <button id="open-add-event-btn" class="btn btn-danger rounded-pill px-4 fw-bold">
+                    <Icon name="fa-solid:plus" class="me-2" /> Add Event
+                </button>
+            </div>
+            <div id="event-grid" class="event-grid"></div>
+        </div>
+
+        <div class="tab-pane fade" id="pills-sermons" role="tabpanel">
+            <div class="bg-white rounded-4 shadow-lg p-4 mb-5 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold text-dark">Sermons List</h4>
+                <button id="open-add-sermon-btn" class="btn btn-danger rounded-pill px-4 fw-bold">
+                    <Icon name="fa-solid:plus" class="me-2" /> Add Sermon
+                </button>
+            </div>
+            <div id="sermon-grid" class="event-grid"></div>
+        </div>
+
+    </div>
+  </div>
+
+  <div class="modal" id="addEventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-body p-4">
+          <h5 class="fw-bold mb-4">Add New Event</h5>
+          <form id="add-event-form">
+            <div class="form-floating mb-3"><input type="url" class="form-control" name="image_url" placeholder="Link"><label>Image Link (Optional)</label></div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" name="title" required placeholder="Title"><label>Event Title</label></div>
+            <div class="form-floating mb-3"><input type="datetime-local" class="form-control" name="event_date" required><label>Date & Time</label></div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" name="location" required placeholder="Location"><label>Location</label></div>
+            <div class="form-floating mb-3"><textarea class="form-control" name="description" placeholder="Desc" style="height: 100px"></textarea><label>Description</label></div>
+            <div class="d-flex gap-2"><button type="button" class="btn btn-light flex-fill close-modal-trigger">Cancel</button><button type="submit" class="btn btn-danger flex-fill">Save</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="editEventModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-body p-4">
+          <h5 class="fw-bold mb-4">Edit Event</h5>
+          <form id="edit-event-form">
+            <input type="hidden" name="id" id="edit-event-id">
+            <div class="form-floating mb-3"><input type="url" class="form-control" id="edit-event-image" name="image_url" placeholder="Link"><label>Image Link (Optional)</label></div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" id="edit-event-title" name="title" required placeholder="Title"><label>Event Title</label></div>
+            <div class="form-floating mb-3"><input type="datetime-local" class="form-control" id="edit-event-date" name="event_date" required><label>Date & Time</label></div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" id="edit-event-location" name="location" required placeholder="Location"><label>Location</label></div>
+            <div class="form-floating mb-3"><textarea class="form-control" id="edit-event-desc" name="description" placeholder="Desc" style="height: 100px"></textarea><label>Description</label></div>
+            <div class="d-flex gap-2"><button type="button" class="btn btn-light flex-fill close-modal-trigger">Cancel</button><button type="submit" class="btn btn-primary flex-fill">Update</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="addSermonModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-body p-4">
+          <h5 class="fw-bold mb-4">Add New Sermon</h5>
+          <form id="add-sermon-form">
+            <div class="form-floating mb-3"><input type="text" class="form-control" name="title" required placeholder="Title"><label>Sermon Title</label></div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" name="preacher" placeholder="Preacher"><label>Preacher (Optional)</label></div>
+            <div class="form-floating mb-3"><input type="date" class="form-control" name="date_preached" required><label>Date Preached</label></div>
+            <div class="form-floating mb-3"><input type="url" class="form-control" name="video_url" required placeholder="YouTube Link"><label>YouTube Video Link</label></div>
+            <div class="form-floating mb-3"><textarea class="form-control" name="description" placeholder="Desc" style="height: 100px"></textarea><label>Description</label></div>
+            <div class="d-flex gap-2"><button type="button" class="btn btn-light flex-fill close-modal-trigger">Cancel</button><button type="submit" class="btn btn-danger flex-fill">Save</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="editSermonModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-body p-4">
+          <h5 class="fw-bold mb-4">Edit Sermon</h5>
+          <form id="edit-sermon-form">
+            <input type="hidden" name="id" id="edit-sermon-id">
+            <div class="form-floating mb-3"><input type="text" class="form-control" id="edit-sermon-title" name="title" required placeholder="Title"><label>Sermon Title</label></div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" id="edit-sermon-preacher" name="preacher" placeholder="Preacher"><label>Preacher (Optional)</label></div>
+            <div class="form-floating mb-3"><input type="date" class="form-control" id="edit-sermon-date" name="date_preached" required><label>Date Preached</label></div>
+            <div class="form-floating mb-3"><input type="url" class="form-control" id="edit-sermon-video" name="video_url" required placeholder="YouTube Link"><label>YouTube Video Link</label></div>
+            <div class="form-floating mb-3"><textarea class="form-control" id="edit-sermon-desc" name="description" placeholder="Desc" style="height: 100px"></textarea><label>Description</label></div>
+            <div class="d-flex gap-2"><button type="button" class="btn btn-light flex-fill close-modal-trigger">Cancel</button><button type="submit" class="btn btn-primary flex-fill">Update</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</MainLayout>
+
+<script>
+  import { supabase } from "../lib/supabase";
+  declare global { interface Window { bootstrap: any; } }
+  
+  document.addEventListener('astro:page-load', async () => {
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { window.location.href = "/grace-baptist-church/login"; return; }
+    document.getElementById("admin-content")?.classList.remove("d-none");
+    document.getElementById("logout-btn")?.addEventListener("click", async () => { await supabase.auth.signOut(); window.location.href = "/grace-baptist-church/"; });
+
+    const formatDateParts = (dateString: string) => {
+        const date = new Date(dateString);
+        return {
+            month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
+            day: date.getDate().toString(),
+            time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+    }
+    
+    const getYoutubeId = (url: string) => {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    const eventGrid = document.getElementById("event-grid");
+    const sermonGrid = document.getElementById("sermon-grid");
+
+    const penIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" class="me-1"><path d="M410.3 23.1C428.2 5.2 457.2 5.2 475.1 23.1L488.9 36.9C506.8 54.8 506.8 83.8 488.9 101.7L476.4 114.2 397.7 35.5 410.3 23.1zM32 480H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H32C14.3 416 0 430.3 0 448s14.3 32 32 32zM174.7 416H64V305.3l14.2-14.2 287.5-287.5 78.6 78.6L174.7 416zM111.5 320L84 347.5 164.5 428l27.5-27.5L111.5 320z"/></svg>`;
+    const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="currentColor" class="me-1"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>`;
+    const calendarIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="currentColor" class="me-1"><path d="M96 32V64H48C21.5 64 0 85.5 0 112v48H448V112c0-26.5-21.5-48-48-48H352V32c0-17.7-14.3-32-32-32s-32 14.3-32 32V64H160V32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192H0V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V192z"/></svg>`;
+
+    async function fetchData() {
+       const { data: events } = await supabase.from('events').select('*').order('event_date', { ascending: true });
+       if(eventGrid && events) {
+          eventGrid.innerHTML = events.map(e => {
+             const { month, day, time } = formatDateParts(e.event_date);
+             const eventData = encodeURIComponent(JSON.stringify(e));
+             const img = e.image_url ? `<div style="height:140px; background:url('${e.image_url}') center/cover;"></div>` : '';
+             
+             return `<div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
+                ${img}
+                <div class="p-4 flex-grow-1">
+                   <div class="d-flex mb-2"><span class="badge bg-danger me-2">${month} ${day}</span><small class="text-muted">${time}</small></div>
+                   <h5 class="fw-bold mb-1">${e.title}</h5>
+                   <p class="text-muted small mb-0">${e.location}</p>
+                </div>
+                <div class="bg-light p-3 border-top mt-auto d-flex gap-2 justify-content-end">
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3 edit-event-btn d-flex align-items-center" data-event="${eventData}">${penIcon} Edit</button>
+                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3 delete-btn d-flex align-items-center" data-type="events" data-id="${e.id}">${trashIcon} Delete</button>
+                </div>
+             </div>`
+          }).join('');
+       }
+
+       const { data: sermons } = await supabase.from('sermons').select('*').order('date_preached', { ascending: false });
+       if(sermonGrid && sermons) {
+          sermonGrid.innerHTML = sermons.map(s => {
+             const vidId = getYoutubeId(s.video_url);
+             const thumb = vidId ? `https://i.ytimg.com/vi/${vidId}/mqdefault.jpg` : '';
+             const date = new Date(s.date_preached).toLocaleDateString();
+             const sermonData = encodeURIComponent(JSON.stringify(s));
+
+             return `<div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
+                <div style="height:160px; background:url('${thumb}') center/cover;"></div>
+                <div class="p-4 flex-grow-1">
+                   <small class="text-danger fw-bold text-uppercase">Sermon</small>
+                   <h5 class="fw-bold mb-1">${s.title}</h5>
+                   <p class="text-muted small mb-2">By ${s.preacher || 'Unknown'}</p>
+                   <small class="text-muted d-flex align-items-center">${calendarIcon} ${date}</small>
+                </div>
+                <div class="bg-light p-3 border-top mt-auto d-flex gap-2 justify-content-end">
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3 edit-sermon-btn d-flex align-items-center" data-sermon="${sermonData}">${penIcon} Edit</button>
+                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3 delete-btn d-flex align-items-center" data-type="sermons" data-id="${s.id}">${trashIcon} Delete</button>
+                </div>
+             </div>`
+          }).join('');
+       }
+       
+       attachListeners();
+    }
+
+    function attachListeners() {
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                if(!confirm("Delete this item?")) return;
+                const el = e.currentTarget as HTMLElement;
+                await supabase.from(el.dataset.type as string).delete().eq('id', el.dataset.id);
+                fetchData();
+            });
+        });
+
+        document.querySelectorAll('.edit-event-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const el = e.currentTarget as HTMLElement;
+                const event = JSON.parse(decodeURIComponent(el.dataset.event || '{}'));
+                
+                (document.getElementById('edit-event-id') as HTMLInputElement).value = event.id;
+                (document.getElementById('edit-event-title') as HTMLInputElement).value = event.title;
+                (document.getElementById('edit-event-location') as HTMLInputElement).value = event.location;
+                (document.getElementById('edit-event-desc') as HTMLTextAreaElement).value = event.description || '';
+                (document.getElementById('edit-event-image') as HTMLInputElement).value = event.image_url || '';
+                
+                const d = new Date(event.event_date);
+                d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+                (document.getElementById('edit-event-date') as HTMLInputElement).value = d.toISOString().slice(0, 16);
+                
+                toggleModal('editEventModal', true);
+            });
+        });
+
+        document.querySelectorAll('.edit-sermon-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const el = e.currentTarget as HTMLElement;
+                const sermon = JSON.parse(decodeURIComponent(el.dataset.sermon || '{}'));
+                
+                (document.getElementById('edit-sermon-id') as HTMLInputElement).value = sermon.id;
+                (document.getElementById('edit-sermon-title') as HTMLInputElement).value = sermon.title;
+                (document.getElementById('edit-sermon-preacher') as HTMLInputElement).value = sermon.preacher || '';
+                (document.getElementById('edit-sermon-video') as HTMLInputElement).value = sermon.video_url;
+                (document.getElementById('edit-sermon-desc') as HTMLTextAreaElement).value = sermon.description || '';
+                (document.getElementById('edit-sermon-date') as HTMLInputElement).value = sermon.date_preached;
+                
+                toggleModal('editSermonModal', true);
+            });
+        });
+    }
+
+    const toggleModal = (modalId: string, show: boolean) => {
+        const el = document.getElementById(modalId);
+        if(el) { 
+            el.style.display = show ? 'block' : 'none'; 
+            if(show) setTimeout(() => el.classList.add('show'), 10);
+            else el.classList.remove('show');
+        }
+    }
+
+    document.getElementById('open-add-event-btn')?.addEventListener('click', () => toggleModal('addEventModal', true));
+    document.getElementById('open-add-sermon-btn')?.addEventListener('click', () => toggleModal('addSermonModal', true));
+
+    document.querySelectorAll('.close-modal-trigger').forEach(btn => {
+        btn.addEventListener('click', () => {
+            toggleModal('addEventModal', false);
+            toggleModal('addSermonModal', false);
+            toggleModal('editEventModal', false);
+            toggleModal('editSermonModal', false);
+        });
+    });
+
+    document.getElementById('add-event-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData) as any;
+        if(data.image_url === "") data.image_url = null;
+        await supabase.from('events').insert([data]);
+        form.reset(); toggleModal('addEventModal', false); fetchData();
+    });
+
+    document.getElementById('edit-event-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const id = formData.get('id');
+        const data = Object.fromEntries(formData) as any;
+        if(data.image_url === "") data.image_url = null;
+        await supabase.from('events').update(data).eq('id', id);
+        toggleModal('editEventModal', false); fetchData();
+    });
+
+    document.getElementById('add-sermon-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData) as any;
+        await supabase.from('sermons').insert([data]);
+        form.reset(); toggleModal('addSermonModal', false); fetchData();
+    });
+
+    document.getElementById('edit-sermon-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const id = formData.get('id');
+        const data = Object.fromEntries(formData) as any;
+        await supabase.from('sermons').update(data).eq('id', id);
+        toggleModal('editSermonModal', false); fetchData();
+    });
+
+    fetchData();
+  });
+</script>
+
+<style>
+  .page-content { padding-top: 100px; }
+  .fade-in { animation: fadeIn 0.5s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  
+  .event-grid { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
+  @media (min-width: 768px) { .event-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 992px) { .event-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .event-card { border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s ease; }
+  .event-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important; }
+  
+  .modal { background-color: rgba(0, 0, 0, 0.5); }
+  
+  .nav-pills .nav-link { color: #555; background: #fff; margin: 0 5px; }
+  .nav-pills .nav-link.active { background-color: #dc3545; color: white; }
+</style>

@@ -24,6 +24,9 @@ jobs:
       # This action handles installing dependencies and building your Astro site automatically
       - name: Install, build, and upload
         uses: withastro/action@v3
+        env:
+          PUBLIC_SUPABASE_URL: ${{ secrets.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
         with:
           # If your package.json is in a subfolder, uncomment the next line:
           # path: ./my-app

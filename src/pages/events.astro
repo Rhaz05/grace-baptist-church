@@ -1,64 +1,21 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import { Icon } from 'astro-icon/components';
+import { supabase } from "../lib/supabase";
 
-// --- PLACEHOLDER DATA ---
-const upcomingEvents = [
-  {
-    id: 1,
-    title: "Community Worship Night",
-    date: "2023-10-25",
-    time: "7:00 PM - 9:00 PM",
-    location: "Main Sanctuary",
-    description: "A special evening of extended praise, worship, and prayer for our community."
-  },
-  {
-    id: 2,
-    title: "Fall Family Picnic",
-    date: "2023-10-28",
-    time: "11:00 AM - 2:00 PM",
-    location: "City Park Pavilion",
-    description: "Bring a side dish to share! Games, food, and fellowship for all ages."
-  },
-  {
-    id: 3,
-    title: "Youth Lock-In",
-    date: "2023-11-03",
-    time: "8:00 PM Friday - 8:00 AM Saturday",
-    location: "Youth Center",
-    description: "An overnight event for grades 7-12 with games, movies, and devotionals."
-  },
-  {
-    id: 4,
-    title: "Mens Prayer Breakfast",
-    date: "2023-11-11",
-    time: "7:30 AM - 9:00 AM",
-    location: "Fellowship Hall",
-    description: "Join us for a hearty breakfast and a time of prayer and fellowship."
-  },
-  {
-    id: 5,
-    title: "Thanksgiving Service",
-    date: "2023-11-23",
-    time: "10:00 AM - 11:30 AM",
-    location: "Main Sanctuary",
-    description: "A special service dedicating time to give thanks for God's blessings."
-  },
-  {
-    id: 6,
-    title: "Christmas Choir Rehearsal",
-    date: "2023-11-30",
-    time: "6:30 PM - 8:30 PM",
-    location: "Music Room",
-    description: "First rehearsal for the annual Christmas Cantata. All voices welcome!"
-  }
-];
+const { data: eventsData, error } = await supabase
+  .from('events')
+  .select('*')
+  .order('event_date', { ascending: true });
 
-function getDateParts(dateString: string) {
+const upcomingEvents = eventsData || [];
+
+function formatEventData(dateString: string) {
     const date = new Date(dateString);
     return {
         month: date.toLocaleString('default', { month: 'short' }).toUpperCase(),
-        day: date.getDate().toString()
+        day: date.getDate().toString(),
+        time: date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 }
 ---
@@ -74,9 +31,7 @@ function getDateParts(dateString: string) {
 
         <section class="mb-5 fade-in-up" style="animation-delay: 0.1s;">
             <div class="d-flex justify-content-center">
-                
                 <div class="calendar-card bg-white rounded-4 shadow-lg p-3 p-md-4 w-100">
-                    
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <button id="prevMonthBtn" class="nav-btn">
                             <Icon name="fa-solid:chevron-left" />
@@ -93,12 +48,9 @@ function getDateParts(dateString: string) {
 
                     <div id="calendar-grid" class="calendar-grid">
                         </div>
-
                 </div>
-
             </div>
         </section>
-
 
         <section class="my-5 fade-in-up" style="animation-delay: 0.2s;">
             <div class="d-flex align-items-center mb-4">
@@ -107,35 +59,42 @@ function getDateParts(dateString: string) {
             </div>
             
             <div class="event-grid">
-                {upcomingEvents.map((event) => {
-                    const { month, day } = getDateParts(event.date);
-                    return (
-                    <div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
-                        <div class="p-4 d-flex h-100">
-                            <div class="date-badge me-3 flex-shrink-0 text-center rounded-3 overflow-hidden" style="height: fit-content;">
-                                <div class="bg-danger text-white small fw-bold py-1 px-2 text-uppercase">{month}</div>
-                                <div class="bg-light text-dark fs-3 fw-bold py-2">{day}</div>
-                            </div>
+                {upcomingEvents.length === 0 ? (
+                    <div class="text-white text-opacity-75 p-3">No upcoming events scheduled at this time.</div>
+                ) : (
+                    upcomingEvents.map((event) => {
+                        const { month, day, time } = formatEventData(event.event_date);
+                        return (
+                        <div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
                             
-                            <div class="flex-grow-1">
-                                <h5 class="fw-bold text-dark mb-2">{event.title}</h5>
-                                <div class="text-muted small mb-3">
-                                    <div class="d-flex align-items-center mb-1">
-                                        <Icon name="fa-solid:clock" class="me-2 opacity-50" /> {event.time}
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <Icon name="fa-solid:map-marker-alt" class="me-2 opacity-50" /> {event.location}
-                                    </div>
+                            {/* NEW: Display Image if URL exists */}
+                            {event.image_url && (
+                                <div style={`height: 200px; background-image: url('${event.image_url}'); background-size: cover; background-position: center;`}></div>
+                            )}
+
+                            <div class="p-4 d-flex">
+                                <div class="date-badge me-3 flex-shrink-0 text-center rounded-3 overflow-hidden" style="height: fit-content;">
+                                    <div class="bg-danger text-white small fw-bold py-1 px-2 text-uppercase">{month}</div>
+                                    <div class="bg-light text-dark fs-3 fw-bold py-2">{day}</div>
                                 </div>
-                                <p class="text-secondary mb-0 small clamp-2">{event.description}</p>
+                                
+                                <div class="flex-grow-1">
+                                    <h5 class="fw-bold text-dark mb-2">{event.title}</h5>
+                                    <div class="text-muted small mb-3">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <Icon name="fa-solid:clock" class="me-2 opacity-50" /> {time}
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <Icon name="fa-solid:map-marker-alt" class="me-2 opacity-50" /> {event.location}
+                                        </div>
+                                    </div>
+                                    <p class="text-secondary mb-0 small clamp-2">{event.description}</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="bg-light p-3 text-center border-top mt-auto">
-                             <a href="#" class="text-danger fw-bold text-decoration-none small text-uppercase ls-1">View Details</a>
-                         </div>
-                    </div>
-                    )
-                })}
+                        )
+                    })
+                )}
             </div>
         </section>
 
@@ -143,23 +102,16 @@ function getDateParts(dateString: string) {
 </MainLayout>
 
 <style>
-    /* =========================================
-       1. GLOBAL LAYOUT ANIMATION
-       ========================================= */
     .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(20px); }
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
     .ls-1 { letter-spacing: 1px; }
 
-    /* =========================================
-       2. COMPACT CALENDAR CSS
-       ========================================= */
     .calendar-card { 
         border: 1px solid rgba(0,0,0,0.05); 
         max-width: 450px;
         margin: 0 auto;  
     }
 
-    /* Navigation Buttons */
     .nav-btn {
         width: 35px; height: 35px;
         border-radius: 50%;
@@ -214,13 +166,11 @@ function getDateParts(dateString: string) {
         cursor: default;
     }
 
-    /* =========================================
-       3. UPCOMING EVENT CARDS
-       ========================================= */
     .event-grid {
         display: grid;
         grid-template-columns: 1fr; 
         gap: 20px;
+        align-items: flex-start; 
     }
 
     @media (min-width: 768px) {
@@ -234,6 +184,7 @@ function getDateParts(dateString: string) {
     .event-card {
         border: 1px solid rgba(0,0,0,0.05);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: white;
     }
 
     .event-card:hover {

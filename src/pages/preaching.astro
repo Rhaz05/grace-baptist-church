@@ -1,6 +1,19 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import { Icon } from 'astro-icon/components';
+import { supabase } from "../lib/supabase";
+
+const { data: sermons } = await supabase
+  .from('sermons')
+  .select('*')
+  .order('date_preached', { ascending: false });
+
+function getThumbnail(url: string) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    const id = (match && match[2].length === 11) ? match[2] : null;
+    return id ? `https://i.ytimg.com/vi/${id}/mqdefault.jpg` : '/img/default-sermon.jpg';
+}
 ---
 
 <MainLayout title="Preaching">
@@ -9,8 +22,7 @@ import { Icon } from 'astro-icon/components';
         
         <section class="text-center" style="padding-bottom: 40px;">
             <h1 class="text-uppercase fw-bold">Preaching</h1>
-            <p class="lead">At Grace Baptist Church, we are committed to sharing the love and teachings of 
-                Jesus Christ with our community and beyond. </p>
+            <p class="lead">At Grace Baptist Church, we are committed to sharing the love and teachings of Jesus Christ.</p>
         </section>
 
         <section class="content-card mb-5" style="background-color: #f4f4f4;">
@@ -35,13 +47,31 @@ import { Icon } from 'astro-icon/components';
             </div>
         </section>
 
-        <div id="sermon-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            <div class="col-12 text-center py-5" id="loader">
-                 <div class="spinner-border text-danger" role="status">
-                    <span class="visually-hidden">Loading...</span>
+        <div id="sermon-grid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" data-sermons={JSON.stringify(sermons)}>
+            {/* Initial Server Render (SEO Friendly) */}
+            {sermons?.map((s) => (
+                <div class="col sermon-item" data-title={s.title.toLowerCase()} data-date={s.date_preached}>
+                    <div class="sermon-card">
+                        <div class="sermon-card-image">
+                            <img src={getThumbnail(s.video_url)} alt={s.title} style="width:100%; height:100%; object-fit:cover;">
+                        </div>
+                        <div class="sermon-card-body">
+                            <div class="meta-tag">Sermon</div>
+                            <div class="sermon-title">{s.title}</div>
+                            <div class="small text-muted mb-3 d-flex align-items-center">
+                                <Icon name="fa-solid:calendar-alt" class="me-2" />
+                                {new Date(s.date_preached).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                            </div>
+                            <p class="text-muted small mb-4 flex-grow-1">{s.description || 'No description available.'}</p>
+                            <div class="d-flex gap-2 mt-auto">
+                                <a href={s.video_url} target="_blank" class="btn btn-sm btn-outline-red flex-fill py-2">
+                                    <Icon name="fa-solid:video" class="me-2" /> Watch
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="mt-2 text-muted">Loading sermons from YouTube...</p>
-            </div>
+            ))}
         </div>
 
         <nav aria-label="Sermon page navigation" class="mt-5">
@@ -59,9 +89,8 @@ import { Icon } from 'astro-icon/components';
     }
     :global(.sermon-card:hover) { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(139, 0, 0, 0.15); }
     :global(.sermon-card-image) {
-        height: 200px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        display: flex; align-items: center; justify-content: center;
-        color: #6c757d; font-size: 3rem; position: relative;
+        height: 200px; background: #eee;
+        display: flex; align-items: center; justify-content: center; position: relative;
     }
     :global(.sermon-card-image::after) {
         content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px;
@@ -84,137 +113,75 @@ import { Icon } from 'astro-icon/components';
 </style>
 
 <script>
-    interface Sermon {
-        id: string;
-        title: string;
-        excerpt: string;
-        book: string;
-        date: string;
-        hasAudio: boolean;
-        hasVideo: boolean;
-        videoLink: string;
-        thumbnail: string;
-    }
-
+    // Client-side filtering logic
     document.addEventListener("astro:page-load", () => {
-        const CHANNEL_ID = 'UCJXoVsiDddXFEGxaiN2yKgA';
-        const cardsContainer = document.getElementById("sermon-grid");
+        const grid = document.getElementById("sermon-grid");
         const paginationContainer = document.getElementById("pagination");
         const searchInput = document.getElementById("searchSermon") as HTMLInputElement;
         const dateInput = document.getElementById("dateSelect") as HTMLInputElement;
-        const searchButton = document.getElementById("searchBtn");
+        const searchBtn = document.getElementById("searchBtn");
 
-        if (!cardsContainer) return;
+        if (!grid) return;
 
-        let allSermons: Sermon[] = [];
-        let filteredSermons: Sermon[] = [];
+        const allItems = Array.from(grid.getElementsByClassName("sermon-item")) as HTMLElement[];
+        const itemsPerPage = 6;
         let currentPage = 1;
-        const cardsPerPage = 6;
+        let filteredItems = [...allItems]; 
 
-        const createSermonCard = (sermon: Sermon) => {
-            const dateObj = new Date(sermon.date);
-            const formattedDate = isNaN(dateObj.getTime()) ? "Date Unavailable" : dateObj.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-
-            return `
-                <div class="col">
-                    <div class="sermon-card">
-                        <div class="sermon-card-image">
-                            <img src="${sermon.thumbnail}" alt="${sermon.title}" style="width:100%; height:100%; object-fit:cover;">
-                        </div>
-                        <div class="sermon-card-body">
-                            <div class="meta-tag">Sermon</div>
-                            <div class="sermon-title">${sermon.title}</div>
-                            <div class="small text-muted mb-3 d-flex align-items-center">
-                                <svg class="me-2" style="width:14px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#6c757d" d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.6 64 0 92.6 0 128v16h448v-16c0-35.4-28.6-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM448 192H0V464c0 35.4 28.6 64 64 64h320c35.4 0 64-28.6 64-64V192z"/></svg>
-                                ${formattedDate}
-                            </div>
-                            <p class="text-muted small mb-4 flex-grow-1">${sermon.excerpt}</p>
-                            <div class="d-flex gap-2 mt-auto">
-                                <a href="${sermon.videoLink}" target="_blank" class="btn btn-sm btn-outline-red flex-fill py-2"><i class="fas fa-video me-2"></i>Watch</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-        };
-
-        const renderCards = () => {
-            cardsContainer.innerHTML = "";
-            const start = (currentPage - 1) * cardsPerPage;
-            const sermonsToRender = filteredSermons.slice(start, start + cardsPerPage);
+        function render() {
+            allItems.forEach(el => el.style.display = 'none');
             
-            if (sermonsToRender.length === 0) {
-                cardsContainer.innerHTML = '<p class="text-center text-muted w-100 p-5">No sermons found matching your criteria.</p>';
-                return;
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const toShow = filteredItems.slice(start, end);
+
+            if(toShow.length === 0) {
             }
-            sermonsToRender.forEach(s => cardsContainer.insertAdjacentHTML("beforeend", createSermonCard(s)));
-        };
+            toShow.forEach(el => el.style.display = 'block');
 
-        const renderPagination = () => {
-            if (!paginationContainer) return;
-            paginationContainer.innerHTML = "";
-            const totalPages = Math.ceil(filteredSermons.length / cardsPerPage);
-            if (totalPages <= 1) return;
+            renderPagination(Math.ceil(filteredItems.length / itemsPerPage));
+        }
 
-            for (let i = 1; i <= totalPages; i++) {
+        function renderPagination(totalPages: number) {
+            if(!paginationContainer) return;
+            paginationContainer.innerHTML = '';
+            if(totalPages <= 1) return;
+
+            for(let i=1; i<=totalPages; i++) {
                 const li = document.createElement('li');
-                li.className = `page-item ${i === currentPage ? "active" : ""}`;
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
                 li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                li.onclick = (e) => { e.preventDefault(); currentPage = i; renderCards(); renderPagination(); window.scrollTo({top: 0, behavior: 'smooth'}); };
+                li.onclick = (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    render();
+                    window.scrollTo({top:0, behavior:'smooth'});
+                };
                 paginationContainer.appendChild(li);
             }
-        };
+        }
 
-        const applyFilters = () => {
-            const searchText = searchInput.value.toLowerCase();
-            const dateFilter = dateInput.value;
-            filteredSermons = allSermons.filter(s => 
-                (s.title.toLowerCase().includes(searchText) || s.excerpt.toLowerCase().includes(searchText)) &&
-                (dateFilter === "" || s.date === dateFilter)
-            );
-            currentPage = 1;
-            renderCards();
-            renderPagination();
-        };
+        function applyFilter() {
+            const term = searchInput.value.toLowerCase();
+            const date = dateInput.value; // YYYY-MM-DD
 
-        searchButton?.addEventListener("click", applyFilters);
-        dateInput?.addEventListener("change", applyFilters);
-
-        const initialize = async () => {
-            try {
-                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`)}`);
-                const json = await response.json();
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(json.contents, "text/xml");
-                const entries = Array.from(xmlDoc.querySelectorAll("entry"));
-
-                allSermons = entries.map((entry) => {
-                    const videoId = entry.querySelector("videoId")?.textContent || entry.querySelector("id")?.textContent?.split(':').pop() || "";
-                    const title = entry.querySelector("title")?.textContent || "Untitled Sermon";
-                    const published = entry.querySelector("published")?.textContent || "";
-                    const description = entry.querySelector("group > description")?.textContent || "";
-                    const link = entry.querySelector("link")?.getAttribute("href") || `https://www.youtube.com/watch?v=${videoId}`;
-
-                    return {
-                        id: videoId,
-                        title: title,
-                        excerpt: description.substring(0, 100) + "...",
-                        book: "Sermon",
-                        date: published.split("T")[0],
-                        hasAudio: false,
-                        hasVideo: true,
-                        videoLink: link,
-                        thumbnail: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`
-                    };
-                });
+            filteredItems = allItems.filter(el => {
+                const title = el.dataset.title || '';
+                const itemDate = el.dataset.date || ''; 
                 
-                filteredSermons = allSermons;
-                renderCards();
-                renderPagination();
-            } catch (error) {
-                cardsContainer.innerHTML = '<p class="text-danger text-center w-100">Error loading data. Please refresh.</p>';
-            }
-        };
+                const matchesSearch = title.includes(term);
+                const matchesDate = date === "" || itemDate === date;
 
-        initialize();
+                return matchesSearch && matchesDate;
+            });
+
+            currentPage = 1;
+            render();
+        }
+
+        searchBtn?.addEventListener("click", applyFilter);
+        dateInput?.addEventListener("change", applyFilter);
+
+        render();
     });
 </script>
