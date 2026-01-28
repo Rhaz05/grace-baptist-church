@@ -8,8 +8,8 @@ const base = import.meta.env.BASE_URL;
         <div class="container-fluid px-3 px-lg-5 py-2 d-flex justify-content-between align-items-center">
             
             <a class="navbar-brand d-flex align-items-center m-0" href={base}>
-                <div class="me-2 me-md-3">
-                    <img src={base + "img/church_logo.png"} alt="Grace Baptist Church Logo" style="max-height: 50px; width: auto;" />
+                <div class="me-2 me-md-3 logo-container">
+                    <img src={base + "img/church_logo.png"} alt="Grace Baptist Church Logo" />
                 </div>
                 <div class="d-flex flex-column justify-content-center lh-1">
                     <span class="fw-bold brand-text text-white text-wrap">Grace Baptist Church</span>
@@ -74,6 +74,42 @@ const base = import.meta.env.BASE_URL;
                         </ul>
                     </div>
                 </li>
+
+                <li class="nav-item">
+                    <button 
+                        id="ministriesTrigger"
+                        class="nav-link d-flex align-items-center justify-content-between w-100 border-0 bg-transparent shadow-none ignore-offcanvas-close" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#ministriesMenu" 
+                        aria-expanded="false"
+                        type="button"
+                    >
+                        <div class="d-flex align-items-center">
+                            <Icon name="fa-solid:hands-helping" class="me-3 nav-icon" size="1.2rem" /> Ministries
+                        </div>
+                        <Icon name="fa-solid:chevron-down" size="0.8rem" class="chevron-icon" />
+                    </button>
+                    
+                    <div class="collapse" id="ministriesMenu">
+                        <ul class="nav flex-column ms-4 ps-2 border-start border-secondary gap-1 mt-1">
+                            <li><a class="nav-link small" href={base + "/jeepney-ministry"}>Jeepney Ministry</a></li>
+                            <li><a class="nav-link small" href={base + "/sunday-school"}>Sunday School</a></li>
+                            <li><a class="nav-link small" href={base + "/multimedia-team"}>Multimedia Team</a></li>
+                            <li><a class="nav-link small" href={base + "/music"}>Music</a></li>
+                            <li><a class="nav-link small" href={base + "/string-of-grace"}>String of Grace</a></li>
+                            <li><a class="nav-link small" href={base + "/2nd-calvary-squadron"}>2nd Calvary Squadron</a></li>
+                            <li><a class="nav-link small" href={base + "/ladies-of-grace"}>Ladies of Grace</a></li>
+                            <li><a class="nav-link small" href={base + "/band-of-brothers"}>Band of Brothers</a></li>
+                            <li><a class="nav-link small" href={base + "/discipleship"}>Discipleship</a></li>
+                            <li><a class="nav-link small" href={base + "/nursery"}>Nursery</a></li>
+                            <li><a class="nav-link small" href={base + "/kitchen"}>Kitchen</a></li>
+                            <li><a class="nav-link small" href={base + "/youth"}>Youth</a></li>
+                            <li><a class="nav-link small" href={base + "/children-ministry"}>Children Ministry</a></li>
+                            <li><a class="nav-link small" href={base + "/choir-ministry"}>Choir Ministry</a></li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center" href={base + "/staff"}>
                         <Icon name="fa-solid:users" class="me-3 nav-icon" size="1.2rem" /> Staff
@@ -118,7 +154,6 @@ const base = import.meta.env.BASE_URL;
         --text-muted: rgba(255, 255, 255, 0.6);
     }
 
-    /* HEADER: Z-Index 1020 (Standard Sticky) */
     .site-header {
         background-color: var(--header-bg);
         border-bottom: 4px solid var(--accent-red);
@@ -128,11 +163,10 @@ const base = import.meta.env.BASE_URL;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
-    /* OFFCANVAS: Z-Index 1050 (Higher than Header) */
     .offcanvas-dark {
         background-color: var(--header-bg);
         color: var(--text-white);
-        z-index: 99999 !important; /* Force to top */
+        z-index: 99999 !important; 
     }
 
     .logo-container img {
@@ -164,7 +198,6 @@ const base = import.meta.env.BASE_URL;
         border-color: rgba(255,255,255,0.1) !important;
     }
 
-    /* Links */
     .nav-link {
         color: var(--text-white);
         padding: 0.8rem 1rem;
@@ -214,29 +247,34 @@ const base = import.meta.env.BASE_URL;
 
 <script>
 function setupOffcanvas() {
-    const trigger = document.getElementById('bibleStudyTrigger');
+    const triggers = ['bibleStudyTrigger', 'ministriesTrigger'];
     const offcanvasElement = document.getElementById('offcanvasRight');
 
-    if (trigger && offcanvasElement) {
-        trigger.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const targetId = this.getAttribute('data-bs-target');
-            if (!targetId) return; 
+    if (offcanvasElement) {
+        triggers.forEach(id => {
+            const trigger = document.getElementById(id);
+            if (trigger) {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const targetId = this.getAttribute('data-bs-target');
+                    if (!targetId) return; 
 
-            const targetEl = document.querySelector(targetId);
+                    const targetEl = document.querySelector(targetId);
 
-            if (targetEl && (window as any).bootstrap) {
-                const bootstrap = (window as any).bootstrap;
-                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(targetEl);
-                bsCollapse.toggle();
-                
-                const isExpanded = this.getAttribute('aria-expanded') === 'true';
-                this.setAttribute('aria-expanded', (!isExpanded).toString());
+                    if (targetEl && (window as any).bootstrap) {
+                        const bootstrap = (window as any).bootstrap;
+                        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(targetEl);
+                        bsCollapse.toggle();
+                        
+                        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', (!isExpanded).toString());
+                    }
+                }, true);
             }
-        }, true); 
+        });
     }
 }
-    document.addEventListener("astro:page-load", setupOffcanvas);
+document.addEventListener("astro:page-load", setupOffcanvas);
 </script>

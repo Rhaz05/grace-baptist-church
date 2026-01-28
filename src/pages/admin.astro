@@ -36,6 +36,11 @@ function getDateParts(dateString: string) {
                 <Icon name="fa-solid:bible" class="me-2" /> Sermons
             </button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill px-4 fw-bold" id="pills-resources-tab" data-bs-toggle="pill" data-bs-target="#pills-resources" type="button" role="tab">
+                <Icon name="fa-solid:folder-open" class="me-2" /> Resources
+            </button>
+        </li>
     </ul>
 
     <div class="tab-content" id="pills-tabContent">
@@ -58,6 +63,16 @@ function getDateParts(dateString: string) {
                 </button>
             </div>
             <div id="sermon-grid" class="event-grid"></div>
+        </div>
+
+        <div class="tab-pane fade" id="pills-resources" role="tabpanel">
+            <div class="bg-white rounded-4 shadow-lg p-4 mb-5 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold text-dark">Resources List</h4>
+                <button id="open-add-resource-btn" class="btn btn-danger rounded-pill px-4 fw-bold">
+                    <Icon name="fa-solid:plus" class="me-2" /> Add Resource
+                </button>
+            </div>
+            <div id="resource-grid" class="event-grid"></div>
         </div>
 
     </div>
@@ -137,6 +152,63 @@ function getDateParts(dateString: string) {
     </div>
   </div>
 
+  <div class="modal" id="addResourceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-body p-4">
+          <h5 class="fw-bold mb-4">Add New Resource</h5>
+          <form id="add-resource-form">
+            <div class="form-floating mb-3">
+                <select class="form-select" name="category" required>
+                    <option value="Sermon Archive">Sermon Archive</option>
+                    <option value="Sunday School">Sunday School</option>
+                    <!-- <option value="Discipleship">Discipleship</option>
+                    <option value="Bible Reading Guide">Bible Reading Guide</option>
+                    <option value="DVBS">DVBS</option>
+                    <option value="Study Guides">Study Guides</option> -->
+                </select>
+                <label>Category</label>
+            </div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" name="title" required placeholder="Title"><label>Resource Title</label></div>
+            <div class="form-floating mb-3"><input type="url" class="form-control" name="file_url" required placeholder="Drive Link"><label>Google Drive Link</label></div>
+            <div class="form-floating mb-3"><input type="url" class="form-control" name="image_url" placeholder="Cover Image"><label>Cover Image URL (Optional)</label></div>
+            <div class="form-floating mb-3"><textarea class="form-control" name="description" placeholder="Desc" style="height: 100px"></textarea><label>Description</label></div>
+            <div class="d-flex gap-2"><button type="button" class="btn btn-light flex-fill close-modal-trigger">Cancel</button><button type="submit" class="btn btn-danger flex-fill">Save</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="editResourceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-body p-4">
+          <h5 class="fw-bold mb-4">Edit Resource</h5>
+          <form id="edit-resource-form">
+            <input type="hidden" name="id" id="edit-resource-id">
+            <div class="form-floating mb-3">
+                <select class="form-select" id="edit-resource-category" name="category" required>
+                    <option value="Sermon Archive">Sermon Archive</option>
+                    <option value="Sunday School">Sunday School</option>
+                    <option value="Discipleship">Discipleship</option>
+                    <option value="Bible Reading Guide">Bible Reading Guide</option>
+                    <option value="DVBS">DVBS</option>
+                    <option value="Study Guides">Study Guides</option>
+                </select>
+                <label>Category</label>
+            </div>
+            <div class="form-floating mb-3"><input type="text" class="form-control" id="edit-resource-title" name="title" required placeholder="Title"><label>Resource Title</label></div>
+            <div class="form-floating mb-3"><input type="url" class="form-control" id="edit-resource-file" name="file_url" required placeholder="Drive Link"><label>Google Drive Link</label></div>
+            <div class="form-floating mb-3"><input type="url" class="form-control" id="edit-resource-image" name="image_url" placeholder="Cover Image"><label>Cover Image URL (Optional)</label></div>
+            <div class="form-floating mb-3"><textarea class="form-control" id="edit-resource-desc" name="description" placeholder="Desc" style="height: 100px"></textarea><label>Description</label></div>
+            <div class="d-flex gap-2"><button type="button" class="btn btn-light flex-fill close-modal-trigger">Cancel</button><button type="submit" class="btn btn-primary flex-fill">Update</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </MainLayout>
 
 <script>
@@ -165,12 +237,25 @@ function getDateParts(dateString: string) {
         return (match && match[2].length === 11) ? match[2] : null;
     }
 
-    const eventGrid = document.getElementById("event-grid");
-    const sermonGrid = document.getElementById("sermon-grid");
+    const getDirectDownloadLink = (url: string) => {
+        if (!url) return '#';
+        if (url.includes('drive.google.com') && url.includes('/file/d/')) {
+            const idMatch = url.match(/\/d\/(.*?)\//);
+            if (idMatch && idMatch[1]) return `https://drive.google.com/uc?export=download&id=${idMatch[1]}`;
+        }
+        return url;
+    }
 
     const penIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" class="me-1"><path d="M410.3 23.1C428.2 5.2 457.2 5.2 475.1 23.1L488.9 36.9C506.8 54.8 506.8 83.8 488.9 101.7L476.4 114.2 397.7 35.5 410.3 23.1zM32 480H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H32C14.3 416 0 430.3 0 448s14.3 32 32 32zM174.7 416H64V305.3l14.2-14.2 287.5-287.5 78.6 78.6L174.7 416zM111.5 320L84 347.5 164.5 428l27.5-27.5L111.5 320z"/></svg>`;
     const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="currentColor" class="me-1"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>`;
     const calendarIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="currentColor" class="me-1"><path d="M96 32V64H48C21.5 64 0 85.5 0 112v48H448V112c0-26.5-21.5-48-48-48H352V32c0-17.7-14.3-32-32-32s-32 14.3-32 32V64H160V32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192H0V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V192z"/></svg>`;
+    const fileIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512" fill="currentColor" class="me-1"><path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"/></svg>`;
+    
+    const downloadIcon = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="currentColor" class="me-1"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-17.7 0-32 14.3-32 32v32c0 25.3 20.5 45.8 45.8 45.8H434.2c25.3 0 45.8-20.5 45.8-45.8V384c0-17.7-14.3-32-32-32s-32 14.3-32 32v32c0 7.6-6.2 13.8-13.8 13.8H77.8c-7.6 0-13.8-6.2-13.8-13.8V384c0-17.7-14.3-32-32-32z"/></svg>`;
+
+    const eventGrid = document.getElementById("event-grid");
+    const sermonGrid = document.getElementById("sermon-grid");
+    const resourceGrid = document.getElementById("resource-grid");
 
     async function fetchData() {
        const { data: events } = await supabase.from('events').select('*').order('event_date', { ascending: true });
@@ -179,7 +264,6 @@ function getDateParts(dateString: string) {
              const { month, day, time } = formatDateParts(e.event_date);
              const eventData = encodeURIComponent(JSON.stringify(e));
              const img = e.image_url ? `<div style="height:140px; background:url('${e.image_url}') center/cover;"></div>` : '';
-             
              return `<div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
                 ${img}
                 <div class="p-4 flex-grow-1">
@@ -218,6 +302,31 @@ function getDateParts(dateString: string) {
              </div>`
           }).join('');
        }
+
+       const { data: resources } = await supabase.from('resources').select('*').order('created_at', { ascending: false });
+       if(resourceGrid && resources) {
+            resourceGrid.innerHTML = resources.map(r => {
+                const resourceData = encodeURIComponent(JSON.stringify(r));
+                const directLink = getDirectDownloadLink(r.file_url);
+                const thumb = r.image_url ? `background:url('${r.image_url}') center/cover;` : 'background-color: #eee;';
+
+                return `<div class="event-card bg-white rounded-4 shadow-sm overflow-hidden d-flex flex-column">
+                    <div style="height:120px; ${thumb}" class="d-flex align-items-center justify-content-center text-muted">
+                        ${!r.image_url ? fileIcon : ''}
+                    </div>
+                    <div class="p-4 flex-grow-1">
+                        <span class="badge bg-secondary mb-2">${r.category}</span>
+                        <h5 class="fw-bold mb-1 text-truncate">${r.title}</h5>
+                        <p class="text-muted small mb-3 text-truncate">${r.description || ''}</p>
+                        <a href="${directLink}" target="_blank" class="small text-danger fw-bold text-decoration-none d-flex align-items-center gap-1">${downloadIcon} Download</a>
+                    </div>
+                    <div class="bg-light p-3 border-top mt-auto d-flex gap-2 justify-content-end">
+                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3 edit-resource-btn d-flex align-items-center" data-resource="${resourceData}">${penIcon} Edit</button>
+                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3 delete-btn d-flex align-items-center" data-type="resources" data-id="${r.id}">${trashIcon} Delete</button>
+                    </div>
+                </div>`
+            }).join('');
+       }
        
        attachListeners();
     }
@@ -236,17 +345,14 @@ function getDateParts(dateString: string) {
             btn.addEventListener('click', (e) => {
                 const el = e.currentTarget as HTMLElement;
                 const event = JSON.parse(decodeURIComponent(el.dataset.event || '{}'));
-                
                 (document.getElementById('edit-event-id') as HTMLInputElement).value = event.id;
                 (document.getElementById('edit-event-title') as HTMLInputElement).value = event.title;
                 (document.getElementById('edit-event-location') as HTMLInputElement).value = event.location;
                 (document.getElementById('edit-event-desc') as HTMLTextAreaElement).value = event.description || '';
                 (document.getElementById('edit-event-image') as HTMLInputElement).value = event.image_url || '';
-                
                 const d = new Date(event.event_date);
                 d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
                 (document.getElementById('edit-event-date') as HTMLInputElement).value = d.toISOString().slice(0, 16);
-                
                 toggleModal('editEventModal', true);
             });
         });
@@ -255,15 +361,27 @@ function getDateParts(dateString: string) {
             btn.addEventListener('click', (e) => {
                 const el = e.currentTarget as HTMLElement;
                 const sermon = JSON.parse(decodeURIComponent(el.dataset.sermon || '{}'));
-                
                 (document.getElementById('edit-sermon-id') as HTMLInputElement).value = sermon.id;
                 (document.getElementById('edit-sermon-title') as HTMLInputElement).value = sermon.title;
                 (document.getElementById('edit-sermon-preacher') as HTMLInputElement).value = sermon.preacher || '';
                 (document.getElementById('edit-sermon-video') as HTMLInputElement).value = sermon.video_url;
                 (document.getElementById('edit-sermon-desc') as HTMLTextAreaElement).value = sermon.description || '';
                 (document.getElementById('edit-sermon-date') as HTMLInputElement).value = sermon.date_preached;
-                
                 toggleModal('editSermonModal', true);
+            });
+        });
+
+        document.querySelectorAll('.edit-resource-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const el = e.currentTarget as HTMLElement;
+                const res = JSON.parse(decodeURIComponent(el.dataset.resource || '{}'));
+                (document.getElementById('edit-resource-id') as HTMLInputElement).value = res.id;
+                (document.getElementById('edit-resource-category') as HTMLSelectElement).value = res.category;
+                (document.getElementById('edit-resource-title') as HTMLInputElement).value = res.title;
+                (document.getElementById('edit-resource-file') as HTMLInputElement).value = res.file_url;
+                (document.getElementById('edit-resource-image') as HTMLInputElement).value = res.image_url || '';
+                (document.getElementById('edit-resource-desc') as HTMLTextAreaElement).value = res.description || '';
+                toggleModal('editResourceModal', true);
             });
         });
     }
@@ -279,13 +397,16 @@ function getDateParts(dateString: string) {
 
     document.getElementById('open-add-event-btn')?.addEventListener('click', () => toggleModal('addEventModal', true));
     document.getElementById('open-add-sermon-btn')?.addEventListener('click', () => toggleModal('addSermonModal', true));
+    document.getElementById('open-add-resource-btn')?.addEventListener('click', () => toggleModal('addResourceModal', true));
 
     document.querySelectorAll('.close-modal-trigger').forEach(btn => {
         btn.addEventListener('click', () => {
             toggleModal('addEventModal', false);
             toggleModal('addSermonModal', false);
+            toggleModal('addResourceModal', false);
             toggleModal('editEventModal', false);
             toggleModal('editSermonModal', false);
+            toggleModal('editResourceModal', false);
         });
     });
 
@@ -327,6 +448,25 @@ function getDateParts(dateString: string) {
         const data = Object.fromEntries(formData) as any;
         await supabase.from('sermons').update(data).eq('id', id);
         toggleModal('editSermonModal', false); fetchData();
+    });
+
+    document.getElementById('add-resource-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData) as any;
+        await supabase.from('resources').insert([data]);
+        form.reset(); toggleModal('addResourceModal', false); fetchData();
+    });
+
+    document.getElementById('edit-resource-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
+        const formData = new FormData(form);
+        const id = formData.get('id');
+        const data = Object.fromEntries(formData) as any;
+        await supabase.from('resources').update(data).eq('id', id);
+        toggleModal('editResourceModal', false); fetchData();
     });
 
     fetchData();
